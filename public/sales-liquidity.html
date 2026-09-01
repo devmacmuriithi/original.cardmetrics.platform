@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liquidity & Velocity - Trading Card Analytics</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-gray-50" data-page="sales-liquidity">
+    <div class="flex h-screen">
+        <aside class="w-64 bg-gray-900 text-white flex-shrink-0">
+            <!-- Sidebar auto-populated by sidebar-nav.js -->
+        </aside>
+
+        <main class="flex-1 overflow-auto">
+            <div class="p-8">
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                        <i class="fas fa-water text-cyan-500 mr-2"></i>Liquidity & Velocity
+                    </h1>
+                    <p class="text-gray-600">Track sales velocity, liquidity depth, and time-based volume trends.</p>
+                </div>
+
+                <div id="decisionSignals" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-4 mb-6"></div>
+
+                <div id="kpiCards" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8"></div>
+
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-lg shadow p-6" title="Number of sales completed per day. Primary indicator of market liquidity and turnover speed.">
+                        <h3 class="text-lg font-semibold mb-4">Daily Sales Count</h3>
+                        <div class="chart-container"><canvas id="chartSalesByDay"></canvas></div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6" title="Total dollar value sold per day. Helps track value throughput, not just transaction count.">
+                        <h3 class="text-lg font-semibold mb-4">Daily Revenue</h3>
+                        <div class="chart-container"><canvas id="chartRevenueByDay"></canvas></div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6" title="Weekly rhythm of sales activity by day of week. Useful for timing listings and promotions.">
+                        <h3 class="text-lg font-semibold mb-4">Sales by Weekday</h3>
+                        <div class="chart-container"><canvas id="chartSalesByWeekday"></canvas></div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6" title="Sales count split by price tiers. Shows liquidity depth across low, mid, and high ticket segments.">
+                        <h3 class="text-lg font-semibold mb-4">Volume by Price Tier</h3>
+                        <div class="chart-container"><canvas id="chartPriceTierVolume"></canvas></div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6" title="Share of listing formats (Auction/BIN/etc.) in completed sales.">
+                        <h3 class="text-lg font-semibold mb-4">Listing Type Mix</h3>
+                        <div class="chart-container"><canvas id="chartListingTypeShare"></canvas></div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6" title="Distribution of sold listing quantities. Helps detect lot-size behavior and bundle liquidity.">
+                        <h3 class="text-lg font-semibold mb-4">Quantity Distribution</h3>
+                        <div class="chart-container"><canvas id="chartQuantityDistribution"></canvas></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/js/sidebar-nav.js"></script>
+    <script src="/js/sales-decision-signals.js"></script>
+    <script src="/js/sales-liquidity.js"></script>
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Detail - Trading Card Analytics</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-gray-50" data-page="sets">
+    <div class="flex h-screen">
+        <aside class="w-64 bg-gray-900 text-white flex-shrink-0">
+            <!-- Sidebar auto-populated by sidebar-nav.js -->
+        </aside>
+        
+        <main class="flex-1 overflow-auto">
+            <div class="p-8">
+                <!-- Header -->
+                <div class="mb-6">
+                    <a href="/sets" class="text-blue-600 hover:text-blue-800 mb-4 inline-block">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Sets
+                    </a>
+                    <h1 id="setName" class="text-3xl font-bold text-gray-900 mb-2">Loading...</h1>
+                    <p id="setYear" class="text-gray-600"></p>
+                </div>
+
+                <!-- Key Metrics Summary -->
+                <div id="keyMetrics" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-4 mb-8">
+                    <!-- Populated by JavaScript -->
+                </div>
+
+                <!-- 5-Domain Intelligence Dashboard -->
+                
+                <!-- 1. Price Intelligence -->
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-chart-line text-blue-500 mr-2"></i>Price Intelligence
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">7-Day Trend Slope</p>
+                            <p id="trend7d" class="text-2xl font-bold">--</p>
+                            <p class="text-xs text-gray-500 mt-1">Short-term momentum</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">30-Day Trend Slope</p>
+                            <p id="trend30d" class="text-2xl font-bold">--</p>
+                            <p class="text-xs text-gray-500 mt-1">Medium-term trend</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">90-Day Trend Slope</p>
+                            <p id="trend90d" class="text-2xl font-bold">--</p>
+                            <p class="text-xs text-gray-500 mt-1">Long-term baseline</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">Volatility Regime</p>
+                            <p id="volatilityRegime" class="text-lg font-bold">--</p>
+                            <p class="text-xs text-gray-500 mt-1">Risk classification</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">Fair Value Deviation</p>
+                            <p id="fairValueDev" class="text-2xl font-bold">--</p>
+                            <p class="text-xs text-gray-500 mt-1">% over/under 30d avg</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">30-Day Range</p>
+                            <p id="priceRange30d" class="text-lg font-bold">--</p>
+                            <p class="text-xs text-gray-500 mt-1">High/Low spread</p>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <canvas id="priceHistoryChart" class="chart-container"></canvas>
+                    </div>
+                </div>
+
+                <!-- 2. Liquidity Intelligence -->
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-water text-cyan-500 mr-2"></i>Liquidity Intelligence
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">Days to Liquidity</p>
+                            <p id="daysToLiquidity" class="text-2xl font-bold">--</p>
+                            <p class="text-xs text-gray-500 mt-1">Est. time to sell</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">Weekly Sales Velocity</p>
+                            <p id="weeklySales" class="text-2xl font-bold">--</p>
+                            <p class="text-xs text-gray-500 mt-1">Comparable sales/week</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">Liquidity Score</p>
+                            <p id="liquidityScore" class="text-2xl font-bold">--</p>
+                            <p class="text-xs text-gray-500 mt-1">0-100 scale</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">Spread Proxy</p>
+                            <p id="spreadProxy" class="text-2xl font-bold">--</p>
+                            <p class="text-xs text-gray-500 mt-1">Bid-ask estimate</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Grade Intelligence -->
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-certificate text-purple-500 mr-2"></i>Grade Intelligence
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">PSA 10 Premium</p>
+                            <p id="psa10Premium" class="text-2xl font-bold">--</p>
+                            <p class="text-xs text-gray-500 mt-1">% over raw price</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">Grading Expected Value</p>
+                            <p id="gradingEV" class="text-2xl font-bold">--</p>
+                            <p class="text-xs text-gray-500 mt-1">Net of fees ($30)</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">Raw Price</p>
+                            <p id="rawPrice" class="text-2xl font-bold">--</p>
+                            <p class="text-xs text-gray-500 mt-1">Loose/ungraded</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">PSA 10 Price</p>
+                            <p id="psa10Price" class="text-2xl font-bold">--</p>
+                            <p class="text-xs text-gray-500 mt-1">Gem mint value</p>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <canvas id="premiumHistoryChart" class="chart-container"></canvas>
+                    </div>
+                </div>
+
+                <!-- 4. Opportunity Score -->
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-bullseye text-yellow-500 mr-2"></i>Opportunity Score
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <div class="flex items-center justify-center mb-4">
+                                <div class="relative w-48 h-48">
+                                    <svg class="transform -rotate-90 w-48 h-48">
+                                        <circle cx="96" cy="96" r="80" stroke="#e5e7eb" stroke-width="16" fill="none" />
+                                        <circle id="opportunityCircle" cx="96" cy="96" r="80" stroke="#10b981" stroke-width="16" fill="none"
+                                                stroke-dasharray="502.4" stroke-dashoffset="502.4" stroke-linecap="round" />
+                                    </svg>
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="text-center">
+                                            <div id="opportunityScoreValue" class="text-4xl font-bold">--</div>
+                                            <div class="text-sm text-gray-500">/ 100</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <p id="opportunityLabel" class="text-lg font-semibold">--</p>
+                                <p class="text-sm text-gray-600">Composite investment score</p>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold mb-3">Score Breakdown</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>Undervaluation (0-30)</span>
+                                        <span id="undervalScore" class="font-semibold">--</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div id="undervalBar" class="bg-blue-600 h-2 rounded-full" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>Momentum (0-25)</span>
+                                        <span id="momentumScore" class="font-semibold">--</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div id="momentumBar" class="bg-green-600 h-2 rounded-full" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>Liquidity (0-25)</span>
+                                        <span id="liquidityScoreBreakdown" class="font-semibold">--</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div id="liquidityBar" class="bg-cyan-600 h-2 rounded-full" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>Low Volatility Bonus (0-20)</span>
+                                        <span id="volatilityScore" class="font-semibold">--</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div id="volatilityBar" class="bg-purple-600 h-2 rounded-full" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Risk Metrics -->
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-shield-alt text-red-500 mr-2"></i>Risk Metrics
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">Drawdown Risk</p>
+                            <p id="drawdownRisk" class="text-2xl font-bold">--</p>
+                            <p class="text-xs text-gray-500 mt-1">% from 30d high</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">Trend Break Risk</p>
+                            <p id="trendBreakRisk" class="text-lg font-bold">--</p>
+                            <p class="text-xs text-gray-500 mt-1">Reversal probability</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">Data Confidence</p>
+                            <p id="dataConfidence" class="text-2xl font-bold">--</p>
+                            <p class="text-xs text-gray-500 mt-1">Sample quality (0-100)</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">Execution Eligible</p>
+                            <p id="executionEligible" class="text-lg font-bold">--</p>
+                            <p class="text-xs text-gray-500 mt-1">Safe to trade</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Historical Charts -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold mb-4">Momentum Trend</h3>
+                        <canvas id="momentumChart" class="chart-container"></canvas>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold mb-4">Liquidity Trend</h3>
+                        <canvas id="liquidityChart" class="chart-container"></canvas>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <div id="loading" class="loading fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 flex items-center space-x-3">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+            <span>Loading set details...</span>
+        </div>
+    </div>
+
+    <script src="/js/sidebar-nav.js"></script>
+    <script src="/js/set-detail.js"></script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Intelligence - Trading Card Analytics</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        .stat-card {
+            transition: transform 0.2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+        .badge-critical { background: #dc2626; }
+        .badge-high { background: #ea580c; }
+        .badge-medium { background: #f59e0b; }
+        .badge-low { background: #10b981; }
+        .opportunity-card {
+            border-left: 4px solid #3b82f6;
+        }
+        .opportunity-card.arbitrage { border-left-color: #fbbf24; }
+        .opportunity-card.rising-star { border-left-color: #10b981; }
+        .opportunity-card.undervalued { border-left-color: #8b5cf6; }
+    </style>
+</head>
+<body class="bg-gray-50" data-page="intelligence">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gray-900 text-white flex-shrink-0">
+            <!-- Sidebar auto-populated by sidebar-nav.js -->
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="flex-1 overflow-auto">
+            <div class="p-8">
+                <!-- Header -->
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Market Intelligence</h1>
+                    <p class="text-gray-600">Advanced analytics combining pricing data with grading statistics</p>
+                </div>
+
+                <!-- Stats Overview -->
+                <div id="stats-overview" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <!-- Stats will be loaded here -->
+                </div>
+
+                <!-- Tab Navigation -->
+                <div class="bg-white rounded-lg shadow mb-6">
+                    <div class="border-b border-gray-200">
+                        <nav class="flex -mb-px">
+                            <button onclick="switchTab('opportunities')" class="tab-btn active px-6 py-4 text-sm font-medium border-b-2 border-blue-500 text-blue-600">
+                                <i class="fas fa-bullseye mr-2"></i>Investment Opportunities
+                            </button>
+                            <button onclick="switchTab('grading')" class="tab-btn px-6 py-4 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                                <i class="fas fa-certificate mr-2"></i>Grading Intelligence
+                            </button>
+                            <button onclick="switchTab('efficiency')" class="tab-btn px-6 py-4 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                                <i class="fas fa-balance-scale mr-2"></i>Market Efficiency
+                            </button>
+                            <button onclick="switchTab('players')" class="tab-btn px-6 py-4 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                                <i class="fas fa-user-chart mr-2"></i>Player Profiles
+                            </button>
+                            <button onclick="switchTab('alerts')" class="tab-btn px-6 py-4 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                                <i class="fas fa-bell mr-2"></i>Alerts
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Tab Content -->
+                <div id="tab-content">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/js/sidebar-nav.js"></script>
+    <script src="/js/intelligence.js"></script>
+</body>
+</html>

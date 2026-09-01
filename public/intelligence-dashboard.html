@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Intelligence Dashboard - Trading Card Analytics</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        .kpi-card {
+            transition: transform 0.2s;
+        }
+        .kpi-card:hover {
+            transform: translateY(-4px);
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50" data-page="intelligence-dashboard">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gray-900 text-white flex-shrink-0">
+            <!-- Sidebar auto-populated by sidebar-nav.js -->
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="flex-1 overflow-auto">
+            <div class="p-8">
+                <!-- Header -->
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                        <i class="fas fa-chart-pie text-cyan-500 mr-2"></i>
+                        Market Intelligence Dashboard
+                    </h1>
+                    <p class="text-gray-600">Comprehensive analytics and insights from matched pricing and grading data</p>
+                </div>
+
+                <!-- KPI Cards -->
+                <div id="kpiCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <!-- KPIs will be loaded here -->
+                </div>
+
+                <!-- Charts Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Chart 1: Opportunity Types -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Opportunity Types Distribution</h3>
+                        <div class="chart-container">
+                            <canvas id="opportunityTypesChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 2: Alert Priority -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Alert Priority Levels</h3>
+                        <div class="chart-container">
+                            <canvas id="alertPriorityChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 3: Gem Rate Distribution -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Gem Rate Distribution</h3>
+                        <div class="chart-container">
+                            <canvas id="gemRateChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 4: Premium Multiplier -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Premium Multiplier Distribution</h3>
+                        <div class="chart-container">
+                            <canvas id="premiumChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 5: Top Players -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Top 10 Players by Cards Graded</h3>
+                        <div class="chart-container">
+                            <canvas id="topPlayersChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 6: Market Efficiency -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Market Efficiency Breakdown</h3>
+                        <div class="chart-container">
+                            <canvas id="efficiencyChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 7: Investment Score Distribution -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Investment Score Distribution</h3>
+                        <div class="chart-container">
+                            <canvas id="scoreChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 8: Grading Difficulty -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Grading Difficulty Distribution</h3>
+                        <div class="chart-container">
+                            <canvas id="difficultyChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 9: Top Parallels by Gem Rate -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Top 10 Parallels by Avg Gem Rate</h3>
+                        <div class="chart-container">
+                            <canvas id="parallelsChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 10: Price Distribution -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Raw Price Distribution</h3>
+                        <div class="chart-container">
+                            <canvas id="priceChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 11: Expected Value Distribution -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Expected Value Distribution</h3>
+                        <div class="chart-container">
+                            <canvas id="evChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/js/sidebar-nav.js"></script>
+    <script src="/js/intelligence-dashboard.js"></script>
+</body>
+</html>

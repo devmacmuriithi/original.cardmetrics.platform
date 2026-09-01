@@ -1,0 +1,8 @@
+# Placeholder for API routes
+# Future routes to be implemented:
+# - GET /api/cards - List cards with filters
+# - GET /api/cards/:id - Card detail with metrics
+# - GET /api/indices - List market indices
+# - GET /api/indices/:id/values - Index time-series
+# - GET /api/metrics - Computed metrics
+# - POST /api/ingest - Trigger data ingestion

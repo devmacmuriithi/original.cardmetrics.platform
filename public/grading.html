@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grading Intelligence - Trading Card Analytics</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-gray-50" data-page="grading">
+    <div class="flex h-screen">
+        <aside class="w-64 bg-gray-900 text-white flex-shrink-0">
+            <!-- Sidebar auto-populated by sidebar-nav.js -->
+        </aside>
+        
+        <main class="flex-1 overflow-auto">
+            <div class="p-8">
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                        <i class="fas fa-certificate text-green-500 mr-2"></i>Grading Intelligence
+                    </h1>
+                    <p class="text-gray-600">Expected value analysis for grading candidates</p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Search Player</label>
+                            <input type="text" id="searchPlayer" placeholder="Enter player name..." 
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Min Expected Value</label>
+                            <input type="number" id="minEV" value="0" min="0" step="5"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Grading Difficulty</label>
+                            <select id="difficulty" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">All Difficulties</option>
+                                <option value="Extremely Difficult">Extremely Difficult</option>
+                                <option value="Very Difficult">Very Difficult</option>
+                                <option value="Difficult">Difficult</option>
+                                <option value="Moderate">Moderate</option>
+                                <option value="Easy">Easy</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Recommendation</label>
+                            <select id="recommendation" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">All Recommendations</option>
+                                <option value="Strong Buy for Grading">Strong Buy</option>
+                                <option value="Good Grading Candidate">Good Candidate</option>
+                                <option value="Marginal">Marginal</option>
+                                <option value="Not Recommended">Not Recommended</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex justify-between items-center">
+                        <button onclick="applyFilters()" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                            <i class="fas fa-filter mr-2"></i>Apply Filters
+                        </button>
+                        <button onclick="resetFilters()" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                            <i class="fas fa-redo mr-2"></i>Reset
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <p class="text-sm text-gray-600">Showing <span id="resultCount" class="font-semibold">0</span> cards</p>
+                </div>
+
+                <div id="dataContainer" class="bg-white rounded-lg shadow">
+                    <div class="p-6 text-center text-gray-500">
+                        <i class="fas fa-spinner fa-spin text-3xl mb-4"></i>
+                        <p>Loading grading intelligence...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="/js/sidebar-nav.js"></script>
+    <script src="/js/autocomplete.js"></script>
+    <script src="/js/ui-states.js"></script>
+    <script src="/js/grading.js"></script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+{
+  "name": "milestone1-spc-loader",
+  "version": "1.0.0",
+  "description": "Load SPC CSV files into Supabase and verify daily comparisons",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "create-tables": "node create-tables.js",
+    "load-csv": "node load-csv.js",
+    "load-s3-sample": "node load-s3-sample.js",
+    "load-test-date": "node load-additional-date.js",
+    "verify": "node verify-comparisons.js"
+  },
+  "keywords": [
+    "supabase",
+    "csv",
+    "spc",
+    "data-loader"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.980.0",
+    "csv-parse": "^6.1.0",
+    "csv-parser": "^3.0.0",
+    "csv-stringify": "^6.6.0",
+    "date-fns": "^3.0.6",
+    "dotenv": "^16.6.1",
+    "express": "^5.2.1",
+    "pg": "^8.19.0",
+    "pg-format": "^1.0.4"
+  }
+}

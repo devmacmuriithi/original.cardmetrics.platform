@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sale Feed - Trading Card Analytics</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-gray-50" data-page="sale-feed">
+    <div class="flex h-screen">
+        <aside class="w-64 bg-gray-900 text-white flex-shrink-0">
+            <!-- Sidebar auto-populated by sidebar-nav.js -->
+        </aside>
+
+        <main class="flex-1 overflow-auto">
+            <div class="p-8">
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                        <i class="fas fa-tags text-orange-500 mr-2"></i>Sale Feed
+                    </h1>
+                    <p class="text-gray-600">Latest synced card sales listings from card_sales</p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Search</label>
+                            <input type="text" id="searchText" placeholder="Title or listing ID"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Platform</label>
+                            <input type="text" id="platform" placeholder="eBay"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Listing Type</label>
+                            <input type="text" id="listingType" placeholder="Auction / BIN"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div class="flex items-end gap-2">
+                            <button onclick="applyFilters()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Apply</button>
+                            <button onclick="resetFilters()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">Reset</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <p class="text-sm text-gray-600">Showing <span id="resultCount" class="font-semibold">0</span></p>
+                </div>
+
+                <div id="dataContainer" class="bg-white rounded-lg shadow">
+                    <div class="p-6 text-center text-gray-500">
+                        <i class="fas fa-spinner fa-spin text-3xl mb-4"></i>
+                        <p>Loading sale feed...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/js/sidebar-nav.js"></script>
+    <script src="/js/sale-feed.js"></script>
+</body>
+</html>

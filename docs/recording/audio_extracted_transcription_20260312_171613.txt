@@ -1,0 +1,290 @@
+[29:13.5 - 29:15.6] Sure, let me share.
+[29:15.6 - 29:18.8] Then maybe I can share it.
+[29:18.8 - 29:21.1] Great.
+[29:21.1 - 29:22.3] Have you ever heard of this?
+[29:22.3 - 29:23.8] Someone sent me this the other day.
+[29:23.8 - 29:26.7] I haven't looked at it yet.
+[29:26.7 - 29:27.7] Which one is that?
+[29:27.7 - 29:31.6] It's called Sigma Computing.
+[29:31.6 - 29:34.2] Sigma.
+[29:34.2 - 29:39.3] I have not, well, not really.
+[29:39.3 - 29:43.3] Yeah, it's supposed to be like similar to Metabase,
+[29:43.3 - 29:46.7] but it's supposed to be that you can ask more like natural
+[29:46.7 - 29:49.1] language questions.
+[29:49.1 - 29:51.0] Oh, OK.
+[29:51.0 - 29:56.6] Instead of Metabase where I would have to write SQL,
+[29:56.6 - 29:58.4] in here.
+[29:58.0 - 30:01.5] In here, it's sort of like this could also take data from
+[30:01.5 - 30:05.0] Suppabase and then you can basically
+[30:05.0 - 30:06.7] generate things a little bit more with
+[30:06.7 - 30:10.3] natural language instead of SQL queries.
+[30:10.3 - 30:13.4] There's something to, we could look at this in the future.
+[30:13.4 - 30:15.9] Just, yeah, someone sent me this.
+[30:15.9 - 30:20.0] Yeah, and I think also because I'm seeing it has a lot of,
+[30:20.0 - 30:25.9] maybe they might have optimized it from maybe what I'm seeing.
+[30:25.9 - 30:28.3] Yes, yes.
+[30:28.3 - 30:30.9] It might be optimized already for big data, so.
+[30:30.9 - 30:34.4] Yeah, it seems like it from what I read.
+[30:34.4 - 30:35.7] It's supposed to have support like
+[30:35.7 - 30:38.4] very large catalogs of e-commerce products and things.
+[30:38.4 - 30:42.4] So yeah, we could take a look at that in the future.
+[30:42.4 - 30:45.4] Okay. Fine, fine. That's okay.
+[30:45.4 - 30:47.4] Yeah, someone sent it to me the other day.
+[30:47.4 - 30:50.8] I meant to send it to you to see if you're familiar with it.
+[30:50.8 - 31:01.3] Okay. So part of what our challenge is going to be is this.
+[31:01.3 - 31:03.3] So let's download this.
+[31:03.3 - 31:14.8] This is from the SBC SportsCard Pro data, right?
+[31:14.8 - 31:16.9] So this is the data that we have.
+[31:16.9 - 31:29.0] This is, let's get the right.
+[31:34.2 - 31:38.4] So it's this one here.
+[31:46.9 - 32:02.7] What is it called?
+[32:02.7 - 32:13.1] Console ID? Are you still there?
+[32:46.9 - 33:04.4] Can you hear me?
+[33:04.4 - 33:09.0] Yeah, I can hear you. Yes, I can hear you.
+[33:09.0 - 33:12.3] Great. I'm just trying to find.
+[33:12.3 - 33:17.8] We're just not letting me get to this set here.
+[33:22.4 - 33:25.0] Can you see my screen?
+[33:25.0 - 33:27.6] Yes, I can see it.
+[33:36.4 - 33:39.0] There we go.
+[33:42.6 - 33:47.6] Ooh. Here we go.
+[33:58.2 - 33:59.4] So let's start here.
+[33:59.4 - 34:24.6] So this console ID, this is the URL and the set name, right?
+[34:24.6 - 34:29.0] And this matches here.
+[34:29.0 - 34:33.7] So can you pull up, actually, let me see if I can do it here.
+[34:33.7 - 34:42.5] So if I go here to cards, card ID, cool.
+[34:42.5 - 34:43.7] So this is the right set.
+[34:48.1 - 34:54.3] Also, for some reason, I can't seem to, can I scroll over?
+[34:54.3 - 34:56.6] Maybe just metabase on my side, it's weird, I can't.
+[34:56.6 - 34:58.1] There we go, OK.
+[34:58.1 - 35:05.5] So if we can add the set ID, the console ID, and the set name.
+[35:09.2 - 35:11.8] I think we have the console.
+[35:11.8 - 35:13.2] OK, yeah, I see that.
+[35:18.9 - 35:21.1] So yeah, if we can, oh, so console name is there.
+[35:21.1 - 35:22.3] OK, great, console name is there.
+[35:22.3 - 35:23.4] Good, I didn't notice that before.
+[35:23.4 - 35:26.1] Great, so if we can also add the console ID,
+[35:26.1 - 35:27.9] I think that would be helpful.
+[35:28.9 - 35:29.7] OK, good.
+[35:29.7 - 35:35.3] So this gives us this card.
+[35:35.3 - 35:38.0] So we have this set.
+[35:38.0 - 35:43.2] So this set has 25,000 items.
+[35:43.2 - 35:53.5] Now we have this file here, which I can download,
+[35:53.5 - 36:05.4] which has your gem rating.
+[36:05.4 - 36:09.2] Now, this gets here.
+[36:09.2 - 36:13.7] I thought this gave me, this is only tens, hmm.
+[36:16.7 - 36:19.8] Oh, there we go, this is all the grades, good.
+[36:19.8 - 36:21.7] So let's take a look at this.
+[36:23.5 - 36:31.1] You can see my screen, right?
+[36:31.1 - 36:32.2] Yes, I can see it.
+[36:32.2 - 36:33.2] Great.
+[36:53.5 - 37:06.5] So we're going to be able to match this on our side.
+[37:06.5 - 37:07.5] Yep.
+[37:23.5 - 37:50.6] So this is all the data in the CSV file
+[37:50.6 - 37:55.1] that you have loaded in Metabase.
+[37:55.1 - 37:57.6] This is from this site, which is GemRate.
+[37:57.6 - 38:03.6] So this is going to give us the breakdown for how many cards.
+[38:03.6 - 38:04.1] Yep.
+[38:06.9 - 38:09.1] So now what we're going to need to do
+[38:09.1 - 38:11.1] is we're going to need to match.
+[38:11.1 - 38:15.6] So here, let's pick this card here.
+[38:16.6 - 38:22.6] And I'm going to give you all these files, so let's do this.
+[38:22.6 - 38:26.6] So one of the hard parts here is, one,
+[38:26.6 - 38:30.6] just kind of getting all the data organized, right?
+[38:30.6 - 38:35.6] This is the SPC, CSV data.
+[38:35.6 - 38:40.6] And then the next hard part is really all the matching.
+[38:40.6 - 38:42.6] Yep.
+[38:43.6 - 38:44.1] Yep.
+[38:56.6 - 39:03.6] So the matching is interesting, because now all of a sudden,
+[39:03.6 - 39:06.6] we can have these links, which are helpful, too.
+[39:06.6 - 39:08.6] So we could put these links in our system,
+[39:08.6 - 39:13.6] and I can get to the card-level data, which is kind of helpful.
+[39:13.6 - 39:16.6] So inserting these links would be good.
+[39:16.6 - 39:27.6] So now we need to match from this card and this ID.
+[39:27.6 - 39:30.6] So it's the silver 234.
+[39:30.6 - 39:57.6] So we're going to look at that.
+[39:57.2 - 40:00.2] Stefan Kassel, there's 84 cards.
+[40:03.2 - 40:05.4] Here's the name of the player, the card descriptor.
+[40:06.4 - 40:08.7] So this is silver 234.
+[40:12.9 - 40:15.2] And then we need to look, it says silver prism.
+[40:16.3 - 40:18.4] And that's okay, because there's not another silver.
+[40:18.4 - 40:20.9] So we need to pre-match.
+[40:20.9 - 40:24.4] So I guess at the SUPA base level or something else.
+[40:24.4 - 40:27.0] So again, we're not doing this in MetaBase.
+[40:27.0 - 40:30.9] We need to be able to match this card.
+[40:30.9 - 40:32.0] We know the set, right?
+[40:32.0 - 40:33.8] So we're always going to start from the same set.
+[40:34.4 - 40:38.0] So if I give you this gem rate with this console ID,
+[40:38.0 - 40:40.6] you'll know it matches to this console ID.
+[40:40.6 - 40:44.7] And then we need to run through and match all of these cards.
+[40:44.7 - 40:49.6] Now, where it gets confusing,
+[40:57.7 - 41:03.3] so one, there's 90 cards here and 80 something here.
+[41:03.3 - 41:03.8] So that's okay.
+[41:03.8 - 41:05.4] We can only match what we can match, right?
+[41:06.7 - 41:10.8] So this pink eyes, white prism, hyper prism,
+[41:10.8 - 41:14.0] we're like, if we look at here, like all the reds, let's do that.
+[41:14.0 - 41:24.8] Red.
+[41:27.7 - 41:28.9] So here's all the reds.
+[41:28.9 - 41:30.4] Now, if we do the same thing here.
+[41:31.6 - 41:32.1] Okay.
+[41:36.4 - 41:41.5] I don't know if there's an easy way to look for red here or not.
+[41:49.9 - 41:50.4] Here we go.
+[41:50.4 - 41:51.4] Here's the reds here.
+[41:58.0 - 42:00.1] So red, laser, reds.
+[42:00.1 - 42:01.3] So let's do this.
+[42:01.3 - 42:08.8] So let's take these cards here.
+[42:21.5 - 42:22.7] So we read.
+[42:22.7 - 42:25.8] So this laser is here, right?
+[42:26.8 - 42:32.0] So it'd be like laser, pulsar, et cetera.
+[42:32.0 - 42:33.7] So this is what we would need to do.
+[42:36.2 - 42:45.0] So what tool would you use to match this name against this card descriptor?
+[42:45.0 - 42:46.9] And then also, again, you could look at the parallels.
+[42:46.9 - 42:47.7] We could look at the name.
+[42:47.7 - 42:49.2] So again, we'd have, and the number.
+[42:49.2 - 42:50.3] So you'd have this data.
+[42:52.4 - 42:52.9] Okay.
+[42:53.5 - 42:56.9] So what tool would you use to match this?
+[43:00.5 - 43:05.5] Probably first, if I have like that generated.
+[43:05.5 - 43:10.9] Maybe we go back and create like a, let me see, a standardized ID.
+[43:12.3 - 43:13.6] Well, you already have that.
+[43:13.6 - 43:17.0] You already have an ID on your side that you created in Metabase then.
+[43:18.8 - 43:19.3] Oh, yeah.
+[43:19.6 - 43:20.1] Right.
+[43:20.1 - 43:23.1] Because you have a set ID and a card ID that you generated.
+[43:24.1 - 43:24.6] Yeah.
+[43:27.3 - 43:31.5] So I'm just looking on the side for like the data, the generate data.
+[43:33.0 - 43:36.9] I think the best approach would be to determine like probably
+[43:37.8 - 43:41.2] like first how generate like names like the card.
+[43:41.8 - 43:46.5] Then convert like that name into like a unique, I'd say maybe a unique
+[43:47.0 - 43:51.4] unique like a value that I can compare against what the data that you already have.
+[43:53.0 - 43:53.5] Right.
+[43:53.5 - 43:56.6] Because you're looking for the, yeah, because we should be able to build it like this.
+[43:56.6 - 43:58.5] So if we, let's do it like this.
+[43:58.5 - 43:59.8] Let's take a look at it.
+[43:59.8 - 44:05.0] So it's more of like maybe if I get like that data, I create like maybe
+[44:06.8 - 44:10.1] I'd say unique reference on the generate data.
+[44:10.1 - 44:14.9] Then now I use that to get like, to do the like the matching.
+[44:15.0 - 44:19.0] To do the like the matching on the database that I'll have on the cards.
+[44:19.0 - 44:19.4] That is.
+[44:19.4 - 44:45.0] So turn on the controlled vocabulary mapping problem.
+[44:45.8 - 44:47.4] So this is a structured field.
+[44:50.2 - 44:53.8] So this is what you were saying, basically parsing and parsing into the structured components.
+[44:54.4 - 44:55.4] Yes, yes.
+[44:55.4 - 45:00.7] So that way, because at any point in time, the data that I have on the one on generate,
+[45:00.7 - 45:06.2] as long as I can normalize them into like maybe a single like format or standardized format,
+[45:06.2 - 45:07.8] then it will be easy to match them.
+[45:10.8 - 45:11.0] Yeah.
+[45:11.0 - 45:13.1] So Red Pulsar, Red Seismic.
+[45:13.2 - 45:22.2] Red, Red Prism, Red, Blue Prism, Red, White Prism.
+[45:24.4 - 45:25.4] Bold description.
+[45:33.2 - 45:34.6] So something like this makes sense.
+[45:39.4 - 45:41.7] Yes, this, this makes a lot of sense.
+[45:41.7 - 45:43.9] Yeah, it's saying not to fuzzy match the titles.
+[45:46.6 - 45:49.1] OK, so I will send you these files.
+[45:49.1 - 45:52.4] And then what we do is this.
+[45:52.4 - 45:56.5] So then we get to what number was this?
+[45:56.5 - 46:04.8] Two, three, four.
+[46:07.8 - 46:09.2] So next we have the Red Ice.
+[46:09.4 - 46:10.6] Which is here.
+[46:13.8 - 46:17.4] And this is what I'm waiting on the first JSON file for.
+[46:18.6 - 46:22.3] OK, and this Red Ice is this ID.
+[46:33.9 - 46:36.3] So if we go here, we should be able to match it.
+[46:40.0 - 46:40.8] Yeah, it's right here.
+[46:43.5 - 46:52.2] So what's good is once we map this, then we're going to get all of this other data.
+[46:52.2 - 46:53.2] So we'll have links.
+[46:54.2 - 46:56.6] And then we'll have like population counts.
+[47:02.7 - 47:04.6] Yeah, how many were graded the month before.
+[47:04.6 - 47:06.7] We could see the year by year trend.
+[47:07.0 - 47:13.7] And then we can see all of this data.
+[47:13.7 - 47:14.5] So this is per.
+[47:14.5 - 47:18.3] So we can see how many 10s versus how many 9s.
+[47:23.8 - 47:25.0] So what's your thought?
+[47:25.0 - 47:27.8] So there's basically going to be like two levels of matching.
+[47:27.8 - 47:29.4] Eventually we're going to match even deeper.
+[47:29.4 - 47:33.1] But just to start with, we're going to, we'll have a set basis.
+[47:33.1 - 47:34.7] So we know that the console ID.
+[47:36.8 - 47:43.6] And then I'm going to feed you the CSV files per console ID that we care about.
+[47:43.6 - 47:46.5] Again, we're not even going to worry about 3,500 console IDs.
+[47:48.3 - 47:51.6] We'll worry about 500 of them, 1,000 of them, something like that.
+[47:53.1 - 47:55.1] And that means I need to find the gem rates.
+[47:55.1 - 48:01.4] Because then what's good about the gem rate is then what we can do is we could do this.
+[48:01.4 - 48:10.0] So if we go to universal.
+[48:21.3 - 48:22.8] I'm not searched by this.
+[48:22.8 - 48:24.0] Let's see.
+[48:24.0 - 48:31.1] Well, maybe I need to do it this way to start.
+[48:36.1 - 48:42.6] I thought I could search by.
+[48:54.0 - 49:12.6] I thought I could search for this universal search.
+[49:24.0 - 49:31.8] There we go.
+[49:31.8 - 49:32.4] Cool.
+[49:32.4 - 49:40.6] So we just, we can insert it here.
+[49:46.6 - 49:48.9] See, I was able to put it here in the gem rate ID.
+[49:48.9 - 49:50.3] Okay.
+[49:56.6 - 50:06.5] So this, we can see if we need it like this,
+[50:06.5 - 50:09.4] or if this gives us all the same data,
+[50:09.4 - 50:13.6] which it might already in here if we go across.
+[50:14.5 - 50:17.6] You might have just the same data here, which is good.
+[50:17.6 - 50:19.5] So once we match that,
+[50:19.5 - 50:22.4] that's perfect, and then when we get to down here,
+[50:22.4 - 50:25.0] all of a sudden, you'd have an image.
+[50:25.0 - 50:29.7] So now in MetaBase, we can display this image,
+[50:29.7 - 50:32.6] and in Algolia, we can display this image.
+[50:32.6 - 50:33.6] Yeah, that's it.
+[50:38.3 - 50:39.7] Interesting, I wonder why.
+[50:43.5 - 50:44.8] There we go.
+[50:44.8 - 50:46.6] So we just use that image in Algolia
+[50:46.6 - 50:48.5] and use that image in MetaBase.
+[50:49.4 - 50:50.2] Okay, okay.
+[50:51.6 - 50:54.8] And then, like I mentioned last time,
+[50:54.8 - 50:57.5] I'm gonna scrape this every day or every few days
+[50:57.5 - 50:59.4] to get all the actual cells.
+[51:00.3 - 51:01.1] Okay, okay.
+[51:02.5 - 51:06.6] And then we'll have this, which is the SPC data,
+[51:06.6 - 51:08.2] but we're gonna get this updated,
+[51:08.2 - 51:11.6] so that way I don't have to download all of those CSV files.
+[51:11.6 - 51:13.6] Maybe I only care about 10 cards.
+[51:14.8 - 51:15.6] Okay.
+[51:15.6 - 51:17.0] So like in the average set,
+[51:19.3 - 51:21.4] here, the interesting thing,
+[51:25.0 - 51:27.5] is we don't really care about that many cards.
+[51:27.5 - 51:29.4] Look at how quick this drops off.
+[51:37.8 - 51:38.7] So let's see.
+[51:38.7 - 51:39.5] So if it's,
+[51:46.7 - 51:47.9] so I'll send you that.
+[51:48.8 - 51:53.9] Yeah, so we need about 50 cells.
+[51:53.9 - 51:54.7] Okay.
+[51:54.7 - 51:56.2] That's what I thought.
+[51:58.1 - 51:59.0] Yeah.
+[52:08.1 - 52:10.4] We need more and more communication.
+[52:11.4 - 52:12.2] That's why I thought,
+[52:12.2 - 52:13.7] we're making such a big chunk of data,
+[52:13.7 - 52:16.2] which is, if I had 20 cards,
+[52:16.2 - 52:17.4] that's what I thought.
+[52:20.0 - 52:22.0] So if you look at this here,
+[52:26.2 - 52:28.1] means we probably stopped caring.
+[52:28.1 - 52:30.0] So out of this whole set
+[52:32.6 - 52:34.8] of 25,000 cards,
+[52:34.8 - 52:37.5] at a maximum we care about 300 of them.
+[52:41.0 - 52:42.5] Because we need things that are gonna sell
+[52:42.5 - 52:44.3] about 50 times a year.
+[52:44.3 - 52:45.9] So about once a week.
+[52:46.9 - 52:47.7] Okay.
+[52:47.7 - 52:49.9] So something down here that's selling
+[52:49.9 - 52:53.2] once every year, right?
+[52:53.2 - 52:55.8] If that much or zero sales in the year,
+[52:55.8 - 52:57.7] like, I have no interest in that.
+[52:57.7 - 52:59.9] I have no interest in this here,
+[52:59.9 - 53:02.2] which sells, you know, once a month.
+[53:02.2 - 53:04.6] Like, there will be certain cases where,
+[53:04.6 - 53:07.5] if it's a very expensive card at once a month,
+[53:07.5 - 53:08.4] we could look at that.
+[53:08.4 - 53:09.9] So if we did like,
+[53:17.2 - 53:21.2] so like, this might be this like $1,400 card
+[53:21.2 - 53:23.1] or a $700 card.
+[53:23.1 - 53:23.9] Yeah.
+[53:23.9 - 53:25.7] The fact that these are popular players, right?
+[53:25.7 - 53:29.5] The fact that that's selling X number of times a month,
+[53:29.5 - 53:31.3] like we might consider it, right?
+[53:31.3 - 53:35.1] But in general, like we're not gonna go down that deep.
+[53:35.1 - 53:38.7] So then what we'll do is,
+[53:38.7 - 53:40.7] we'll take the card ID from here.
+[53:41.7 - 53:42.5] Y
+(Content truncated due to size limit. Use line ranges to read remaining content)

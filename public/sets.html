@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sets Analytics - Trading Card Analytics</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-gray-50" data-page="sets">
+    <div class="flex h-screen">
+        <aside class="w-64 bg-gray-900 text-white flex-shrink-0">
+            <!-- Sidebar auto-populated by sidebar-nav.js -->
+        </aside>
+        
+        <main class="flex-1 overflow-auto">
+            <div class="p-8">
+                <div class="mb-6">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                        <i class="fas fa-layer-group text-purple-500 mr-2"></i>Sets Analytics
+                    </h1>
+                    <p class="text-gray-600">Comprehensive investment intelligence for card sets</p>
+                </div>
+
+                <!-- Intelligence Filters -->
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <h3 class="font-semibold text-gray-900 mb-4">Intelligence Filters</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 mb-1">Search</label>
+                            <input id="searchInput" type="text" placeholder="Set name..." class="w-full px-3 py-2 border rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 mb-1">Trend State</label>
+                            <select id="trendStateFilter" class="w-full px-3 py-2 border rounded-lg">
+                                <option value="">All Trends</option>
+                                <option value="Rising">Rising</option>
+                                <option value="Mixed">Mixed</option>
+                                <option value="Declining">Declining</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 mb-1">Min Liquidity</label>
+                            <input id="minLiquidityFilter" type="number" step="0.1" min="0" max="1" placeholder="0.0 - 1.0" class="w-full px-3 py-2 border rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 mb-1">Min Opportunity Score</label>
+                            <input id="minOpportunityFilter" type="number" min="0" max="100" placeholder="0 - 100" class="w-full px-3 py-2 border rounded-lg">
+                        </div>
+                        <div class="flex items-end gap-2 col-span-full">
+                            <button id="applyFiltersBtn" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">Apply</button>
+                            <button id="resetFiltersBtn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">Reset</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sets Table -->
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onclick="sortBy('console_name')" title="Card set name (e.g., 2025 Topps Baseball). Pulled from console_name in the card_sets table.">
+                                        Set <i id="sort-icon-console_name" class="fas fa-sort ml-1 text-gray-400"></i>
+                                    </th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onclick="sortBy('avg_price')" title="Average ungraded price across all cards in this set. Calculation: SUM(loose_price) / COUNT(cards) where loose_price > 0.">
+                                        Avg Price <i id="sort-icon-avg_price" class="fas fa-sort ml-1 text-gray-400"></i>
+                                    </th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onclick="sortBy('card_count')" title="Total number of cards tracked in this set. Count of rows in cards table linked by console_id.">
+                                        Cards <i id="sort-icon-card_count" class="fas fa-sort ml-1 text-gray-400"></i>
+                                    </th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onclick="sortBy('opportunity_score')" title="Set-level opportunity score (0-100). Step 1: Avg opportunity across cards. Step 2: Weight by cards with PSA10 prices. Step 3: Adjust for set liquidity.">
+                                        Opportunity <i id="sort-icon-opportunity_score" class="fas fa-sort-down ml-1 text-blue-600"></i>
+                                    </th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onclick="sortBy('set_trend')" title="Set trend direction. Step 1: Avg 30d change across cards. Step 2: If avg > +3% = Rising, <-3% = Declining, else Stable.">
+                                        Trend <i id="sort-icon-set_trend" class="fas fa-sort ml-1 text-gray-400"></i>
+                                    </th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onclick="sortBy('avg_momentum')" title="Set momentum score. Step 1: Avg 7d price change across cards. Step 2: Weight by sales volume per card. Step 3: Normalize to 0-100.">
+                                        Momentum <i id="sort-icon-avg_momentum" class="fas fa-sort ml-1 text-gray-400"></i>
+                                    </th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onclick="sortBy('avg_liquidity')" title="Set liquidity score. Step 1: Sum sales volume across all cards in set. Step 2: Calculate avg time between sales. Step 3: More sales + faster turnover = higher score (0-100).">
+                                        Liquidity <i id="sort-icon-avg_liquidity" class="fas fa-sort ml-1 text-gray-400"></i>
+                                    </th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" onclick="sortBy('risk_score')" title="Set risk level. Step 1: Avg price volatility across cards. Step 2: Check price dispersion (range). Step 3: Low dispersion + stable avg = Low risk; High dispersion = High risk.">
+                                        Risk <i id="sort-icon-risk_score" class="fas fa-sort ml-1 text-gray-400"></i>
+                                    </th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" title="Quick actions: View set detail, see all cards in set, or add to watchlist.">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="setsTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="pagination" class="px-6 py-4 bg-gray-50 border-t flex items-center justify-between">
+                        <!-- Pagination controls -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <div id="loading" class="loading fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="display: none;">
+        <div class="bg-white rounded-lg p-6 flex items-center space-x-3">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+            <span>Loading sets...</span>
+        </div>
+    </div>
+
+    <script src="/js/sidebar-nav.js"></script>
+    <script src="/js/sets-enhanced.js"></script>
+</body>
+</html>

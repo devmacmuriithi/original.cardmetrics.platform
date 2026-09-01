@@ -1,0 +1,370 @@
+(5:59 - 6:27)
+Hello. Sorry. Martin, can you hear me? Martin.
+
+(6:27 - 6:32)
+Hey, how are you? Yeah. Hey, how are you doing? Sorry about that. Oh, no problem.
+
+(6:32 - 6:37)
+How's it going? I'm doing good. How are you doing? Doing well. Thank you.
+
+(6:38 - 6:43)
+Okay. I think we can, we can start. Great.
+
+(6:43 - 6:55)
+Do you want to start sharing your screen? Kind of walk me through the, the recent update and yeah, maybe you could show me. I just wasn't able to, to kind of get any of the searches working. Oh, okay.
+
+(6:55 - 7:00)
+Just a moment. Let me just share my screen. Oh, one minute.
+
+(7:03 - 7:38)
+So. Okay. Can you, can you see my screen? I think you're both on audio though.
+
+(7:38 - 7:45)
+So I think both your machines. I've actually muted one. I don't know.
+
+(7:45 - 7:52)
+Am I, am I audible? Or am I, does it have an echo? Nope. It's good now. Thank you.
+
+(7:52 - 7:56)
+Okay. That's okay. So I'm just sharing.
+
+(7:57 - 8:13)
+Just a moment. Oh, so just a moment. Oh yeah.
+
+(8:13 - 8:18)
+You can see my screen, right? Yes. So yeah. So just to kind of, I'll ask a few questions here.
+
+(8:18 - 8:34)
+So this is basically in basketball. We have 5,596 sets, 1.14 million cards. And then on total, there's almost 34,000 sets and over 10.2 million records.
+
+(8:35 - 8:37)
+Yes. Yes. Gotcha.
+
+(8:38 - 8:56)
+So the sets computed records below. This tells us how many cards and then what's to the right. What's that table to the right? This shows like, yeah, this is like an individual card.
+
+(8:59 - 9:16)
+Then what I've also done, well, basically this was just meant to be a summary, although you can use the filters at the top. But at the top, I've also included a specific one for cards. So this is now, this has everything about the cards.
+
+(9:17 - 9:22)
+So it's the one that's here at the top. Okay, great. Yeah.
+
+(9:22 - 9:26)
+Okay, perfect. Yeah. For some reason on my side, let me see if it's loading.
+
+(9:26 - 9:34)
+Give me one second. When I tried it before. Let's see if it's going to let me load this.
+
+(9:37 - 9:40)
+Sets. Okay, good. It's loading now.
+
+(9:40 - 9:47)
+Let me see if I can add a console name. Interesting. Yeah, before, I don't know if it was, I'm not sure what was up.
+
+(9:47 - 9:59)
+It wasn't letting me load. Or do the filter. Actually, when I, all right, I'll watch you do it, and I'll show you kind of where I was getting stuck before.
+
+(9:59 - 10:12)
+Hang on one second. So essentially what I did for the, like, this is the sets. So I put up, like, search by, like, the console UID.
+
+(10:13 - 10:25)
+Yeah, try by console name. Try typing in Panini, P-A-N-I-N. Panini.
+
+(10:26 - 10:40)
+Yeah, this is where I was getting stuck. Let me see why it's not loading. Try typing in maybe 2025 first.
+
+(10:40 - 10:45)
+Yeah, this is where I got stuck. Okay. Maybe.
+
+(10:50 - 11:00)
+Strange. Now probably, okay, maybe, probably just type, let me type in, like, 2025. Probably, like, do a filter with that just to see.
+
+(11:00 - 11:10)
+Okay, it filters. I think maybe the initial, like, search of, like, items is the one that has a challenge. Yeah, so try to type in Panini.
+
+(11:11 - 11:20)
+Okay, can type in, like, that. Yeah, try update filter. Let's see what it does.
+
+(11:22 - 11:31)
+So it gives, like, the results. So this is, I think it's used the name, which is on here. Gotcha.
+
+(11:31 - 11:51)
+So now if you go back and get rid of the console name for a second, if we go back to just the sets here, move that filter, please. Yep. Yeah, see, this is where I was getting stuck, too.
+
+(11:51 - 11:54)
+Maybe try refreshing. Oh, there we go. Gotcha.
+
+(11:54 - 12:20)
+Now if you scroll over, can we do, just sort this by sales volume? By sales volume, let me just go to. Yeah, and I think what we're going to have to do is I think we're going to have to even split up the Suppabase databases per sport, because I don't think this will be able to handle kind of, like, baseball and basketball and everything in one. It's too many.
+
+(12:21 - 12:26)
+Yeah, yeah. Let me just see. Yeah, total sales volume, cool.
+
+(12:27 - 12:37)
+Yep. Great. Now can you scroll to the left so we can see the name? Okay, so I can move this probably to the front.
+
+(12:37 - 12:43)
+Okay, gotcha, gotcha. Yeah, so let's click the first one. This one here? Yeah.
+
+(12:51 - 12:59)
+Okay, this is a card. So it's just a set, sorry. This is interesting.
+
+(12:59 - 13:05)
+Card count, cards with prices. Average, loose, price, medium. Oh, this is cool.
+
+(13:06 - 13:27)
+Price range, standard deviation, total sales, total market volume, average daily value. Excellent. Now, great.
+
+(13:27 - 13:38)
+So we started from sets, and then I was able to just, so how did you go back to the sets page for a second? I just want to make sure I know how to do it. So you went to the first one. Yep.
+
+(13:39 - 13:54)
+So this is like, this is the one for, this is like one of the results. So you just clicked on like view details for it. Well, that'll be on that day if we wanted to see the overall.
+
+(13:54 - 14:01)
+So if you did a console URL. Yeah, let's sort it again. Let's go back.
+
+(14:01 - 14:13)
+Let's sort this page again by. So I can filter that, then you can export from here. You can download the results from here.
+
+(14:13 - 14:19)
+Okay, good, good. Yeah. So I think like these results, you can basically like download them from here.
+
+(14:19 - 14:27)
+It'll give you like the options, CSV, Excel, JSON. So you can go with maybe CSV. So now, oh, that's perfect.
+
+(14:27 - 14:37)
+So now if you scroll over, let's sort this, let's sort this now by sales volume, high to low. Sales volume, high to low. So this one here.
+
+(14:39 - 14:54)
+Great. Let's, now, how do we look at this one set? Not just in that one day, but the whole, can we see that? Or are we looking at it on a per day basis? Okay. Now, okay.
+
+(14:54 - 15:06)
+I've not added like the filter by day. So basically, this whole filter here is for like this particular like set. So you have the option of like maybe downloading the results for this.
+
+(15:07 - 15:27)
+But now, because all this data, remember like maybe like this data is like on a daily basis. So when we filtered by this particular like console name, then what it gave us is the results for Panini for the different days that have been populated. So I think maybe I can include like the filter by day.
+
+(15:28 - 15:38)
+It's like an additional like maybe date range so that you can also like select a date range if you don't want to. Perfect. Again, if I want to see this specific card.
+
+(15:38 - 15:40)
+Yes. Yes. Oh, the set.
+
+(15:40 - 15:42)
+Yeah. Let's look at that set. So we go to view details.
+
+(15:42 - 15:51)
+Gotcha. And this gives us this nice summary. Great.
+
+(15:51 - 16:01)
+So you can close that, that, that right window, the right, the modal. Oh, sorry. Yeah, that looks good though.
+
+(16:01 - 16:11)
+That's a good summary. Now let's sort this now by by sales volume here. So first we looked at sales volume for the sets under Panini.
+
+(16:11 - 16:20)
+Now we're going to look at sales volume here. So these are sales volume. So you want to filter by.
+
+(16:20 - 16:23)
+Yeah. Let's sort it. Okay.
+
+(16:25 - 16:36)
+So sending. This is in descending order. Yeah.
+
+(16:37 - 16:53)
+Okay, good. So now let's see the names of these. That's the set names.
+
+(16:54 - 17:01)
+Shouldn't we have the, this should be the card names right there, right? Because this is all the same. Wait, actually. No, this is.
+
+(17:03 - 17:06)
+This is. Oh, this is sets containing the name Panini. Okay.
+
+(17:06 - 17:14)
+So we got it. So let me just go back to the. Let me go to started from set computed metrics.
+
+(17:15 - 17:23)
+So maybe I go to cards. Let me just go back to that dashboard. So the cards are the ones that are here.
+
+(17:24 - 17:36)
+So now these would give you like all the cards. So here I can now like filter by maybe like this is Panini. So basically like has filtered out all the cards under that.
+
+(17:37 - 17:46)
+So if you go up to the top where it says card name. Type in Victor contains, contains Victor. Victor.
+
+(17:47 - 18:09)
+Okay. Yeah. I wonder why it's not loading.
+
+(18:37 - 18:54)
+Hello. I got lost. Hello.
+
+(18:54 - 18:56)
+Oh, no problem. Yeah. We lost your screen too.
+
+(18:57 - 19:12)
+Yep. So let me just try again. Can you see it? Yes, I can.
+
+(19:15 - 19:29)
+So let me just search again. So this is, this is Victor. So probably we can do maybe this.
+
+(19:37 - 19:44)
+Okay. So these are the results. Hello.
+
+(19:45 - 19:49)
+Yes. So is this based on card name? Yes. Yes.
+
+(19:49 - 19:54)
+Oh, wait. I thought I'd written Victor. Just a moment.
+
+(19:56 - 20:01)
+Yeah. This is based off like card name Victor. Great.
+
+(20:01 - 20:07)
+Perfect. All right. So now this is the various sets in Panini.
+
+(20:07 - 20:20)
+So now let's sort this, let's sort this table by, by sales volume. So I'll go to the sales volume section here. Yep.
+
+(20:24 - 20:31)
+Yeah. We'll set it to sales volume. Great.
+
+(20:31 - 20:40)
+Now let's see that first card. So if you scroll all the way back to the start, let's see what that top card is. 79.
+
+(20:41 - 20:56)
+Great. So, so if we, so now we can see, so this is based, this is the card level. So if you scroll to the right, does it give us all of our different prices? Yes, it gives.
+
+(20:57 - 21:07)
+So the lowest price, then you also have like, I think. There we go. PSA 10.
+
+(21:07 - 21:10)
+There we go. Yep. Okay.
+
+(21:12 - 21:38)
+So now if we wanted to compare those first five cards by the PSA 10 price on a chart, like where we have, we only have like five or six days worth of data. How would we do that in Metabase? You want to compare how many cards? Like several cards? Let's say like, yeah, like the first five or something. Like the first five.
+
+(21:38 - 21:55)
+Okay. Now, what, what maybe I can do is I can like have like a, like a visual first for that, like a particular, like a, basically for that specific comparison. Then when you come here, all you need to do is specify the cards that you want.
+
+(21:56 - 22:05)
+Then the chart will automatically plot for those particular cards. That would be great. And then same thing, if we could have like a date range search for this, same thing as Seth's.
+
+(22:05 - 22:18)
+Like for now, we only have those eight or 10 days worth of data, but we'll start loading for the more important sets. We'll start loading those daily and the most important cards. As I mentioned, I got to get you the specs still.
+
+(22:18 - 22:33)
+I'm waiting for the JSON sample where we'll have like the, the actual daily sales beyond just the whole set. Yeah. Okay, good.
+
+(22:33 - 22:44)
+Maybe the filter that I can include is the one for the date because I excluded it here. So I think you can include that so that you can select a specific date. Now that would be great.
+
+(22:44 - 23:03)
+And then, and then also the ability to select, you know, one and then see it on the chart and then multiple to see them on the chart. So now if you go back up to the card name and Victor, when you start typing in it, though, we can't. So have you clear that? Yeah.
+
+(23:03 - 23:15)
+Now what I'll check is the limits that because our data sets, I'd say we have quite a lot of data. So just need to check like. Oh, you know, you know what it is.
+
+(23:15 - 23:17)
+You know what it is right off the bat. I see. This is everything.
+
+(23:17 - 23:31)
+This is all 10 million. So I think if we restricted this to basketball and then restricted this to panini. This right here that I think that's everything.
+
+(23:31 - 23:35)
+That's why. That's like probably 10 million entries. Yep.
+
+(23:36 - 23:44)
+So I think that's having difficulty. Yeah. So if you get rid of vector for a second, type in type in PS five.
+
+(23:46 - 23:49)
+And then hit filter. Yeah. And hit filter.
+
+(23:49 - 23:55)
+So I see for the and then hit update filter. And that'll tell us if we're on it. Let's see.
+
+(23:58 - 24:02)
+Yeah. I have a feeling. I don't know if all the data is in it, but I have a feeling it's searching all 10 million.
+
+(24:03 - 24:22)
+Because those first names weren't card names. So I think I think what we need to do is we we're going to need to break supper base into per sport, like basketball, football, tennis. And then, you know, when we want to do Legos, you know, we have some Lego data.
+
+(24:22 - 24:30)
+Then we could pull Lego data because right now it's trying to search. Or maybe not, because that is interesting. Yeah.
+
+(24:30 - 24:38)
+Just before it looked like certain certain those titles weren't. We're like, oh, I don't know if that was from all 10 million or not. I'm not sure.
+
+(24:40 - 25:00)
+Yeah. If you could take a look at the, you know, basically, like, you know, there's the if the console name is panini, then those date you should be searching. It's like, I guess, the order of operations, like when you're searching a card ID or a card name, it should then search only within those only within those only within that console name.
+
+(25:01 - 25:08)
+OK, OK. Let me see if I can tie in like this filter is on here to the one that's here. Right.
+
+(25:08 - 25:32)
+And then and then if it was if it was no console name, if it was selected all, then you would just type in a name and then you would see everything related to, in this case, basketball. So I do think we we need to split out like we had those thirty five thousand sets in the 10 million records. I do think we need to break it out where we do, you know, a sub base for basketball, football, tennis, Legos, everything.
+
+(25:32 - 25:42)
+So everything will just load much easier. OK. So I think otherwise this is just this is this is already very big and we only have a few days worth of data.
+
+(25:43 - 25:47)
+Yeah. Yeah. I think we'll have to split.
+
+(25:48 - 26:08)
+But I think once once maybe you we are clear, probably like with the with this sets or maybe I can just test out with like just this particular set. Then we see what happens. I can just like try split it up by sports then.
+
+(26:10 - 26:28)
+Yeah, I think that's probably our best bet, because then that would help us. Because then if we want to look at Legos, then we just go to a Lego list, because otherwise we start typing in Star Wars and then you have Star Wars Legos, you have Star Wars video games, you have everything. You could do a category selector.
+
+(26:28 - 26:40)
+But I think the challenge becomes that this is just so much data. Yeah, probably if we get these into like Algolia, maybe we can do like this, such as by Algolia. Yes.
+
+(26:41 - 26:47)
+Much faster. Yes, I just I think that's a good idea. Yeah.
+
+(26:50 - 27:02)
+Yeah, I think that I think that's a I think that's a very good idea, actually. Okay, good. Anything else that you wanted to show here? Not really.
+
+(27:02 - 27:26)
+I think what I was also like, well, because it not like responded with the other item, I was also like trying to see if we can like get like maybe like a card detailed page, like the ones that you shared, although it's not like done. So I tried to come up with, I'd say, like a way to view like all the cards first, then going into like a specific card. Oh, awesome.
+
+(27:26 - 27:31)
+Awesome. Is this pulling from Supper Base? Yes, yes. From Supper Base, from the one that we've created.
+
+(27:32 - 27:36)
+Let me just try restart, restart the server. Oh, that's awesome. And then we can look at Volatility.
+
+(27:37 - 27:45)
+I'll show you kind of what we've been working on for that. Let me just see. Don't know why it's not loading.
+
+(28:10 - 28:26)
+I think this seems to be something that that I need to fix. It's not booting up like the server. So let me just resolve it, then maybe we can check on it.
+
+(28:26 - 28:50)
+Yeah, of course. Yeah, no, but I like that concept of putting everything and then that's querying Supper Base, right? Yes, yes, yes. So I think I can put up like this, so it would show like even like the cards, the cards list, the card grid, and also like you also like able to see, to go into like a specific card and view the details for it.
+
+(28:50 - 29:04)
+Because then what's good is, is whenever you're done showing yours, I'll kind of switch back to my screen. We could take a look at that detail page again, because then once I have the JSON for that, you'll actually have an image of the card. You'll have every day's pricing, things like that.
+
+(29:05 - 29:09)
+Yeah, yeah. Okay. I think you can share.
+
+(29:09 - 29:14)
+Let me try like restart this. I think this is just a challenge. Sure.
+
+(29:14 - 29:19)
+Let me share. Then maybe I can share it. Great.
+
+(29:21 - 29:30)
+Have you ever heard of this? Someone sent me this the other day. I haven't looked at it yet. Which one is that? It's called Sigma Computing.
+
+(29:32 - 29:48)
+Sigma. I've not, well, not really. Yeah, it's supposed to be like, like similar to Metabase, but it's supposed to be that you can like ask more like natural language questions.
+
+(29:49 - 29:57)
+Oh, okay. Instead of Metabase where I would have to write, you know, SQL. In here.
+
+(29:58 - 29:59)
+In here.
+
+(This file is longer than 30 minutes. Go Unlimited at https://turboscribe.ai/ to transcribe files up to 10 hours long.)

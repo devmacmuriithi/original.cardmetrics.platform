@@ -1,0 +1,6 @@
+// Placeholder for business logic services
+// Future services:
+// - CardService - Card business logic
+// - IndexService - Index computation
+// - MetricsService - Metrics calculation
+// - IngestionService - Data pipeline orchestration

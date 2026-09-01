@@ -1,0 +1,6 @@
+// Placeholder for data models
+// Future models:
+// - CardModel - Card CRUD operations
+// - IndexModel - Index management
+// - MetricsModel - Computed metrics access
+// - SnapshotModel - Daily snapshot queries

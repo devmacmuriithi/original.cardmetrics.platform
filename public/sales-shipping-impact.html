@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shipping Impact - Trading Card Analytics</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-gray-50" data-page="sales-shipping-impact">
+    <div class="flex h-screen">
+        <aside class="w-64 bg-gray-900 text-white flex-shrink-0">
+            <!-- Sidebar auto-populated by sidebar-nav.js -->
+        </aside>
+
+        <main class="flex-1 overflow-auto">
+            <div class="p-8">
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                        <i class="fas fa-truck text-orange-500 mr-2"></i>Shipping & Total Cost Impact
+                    </h1>
+                    <p class="text-gray-600">Understand shipping cost drag and its impact on buyer totals.</p>
+                </div>
+
+                <div id="decisionSignals" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-4 mb-6"></div>
+
+                <div id="kpiCards" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8"></div>
+
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-lg shadow p-6" title="Count of sales grouped by shipping cost tiers. Shows how common free, low, and high shipping are.">
+                        <h3 class="text-lg font-semibold mb-4">Shipping Cost Distribution</h3>
+                        <div class="chart-container"><canvas id="chartShippingDistribution"></canvas></div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6" title="Average shipping cost by marketplace platform. Helps compare hidden cost drag across channels.">
+                        <h3 class="text-lg font-semibold mb-4">Avg Shipping by Platform</h3>
+                        <div class="chart-container"><canvas id="chartShippingByPlatform"></canvas></div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6" title="Average shipping cost by listing format (Auction, BIN, etc.). Useful for execution strategy.">
+                        <h3 class="text-lg font-semibold mb-4">Shipping by Listing Type</h3>
+                        <div class="chart-container"><canvas id="chartShippingByListingType"></canvas></div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6" title="Average shipping cost by condition/grade tier. Helps understand all-in cost by inventory quality.">
+                        <h3 class="text-lg font-semibold mb-4">Shipping by Condition</h3>
+                        <div class="chart-container"><canvas id="chartShippingByCondition"></canvas></div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6" title="Average shipping by sale price tier. Highlights whether shipping is proportionally heavy on lower-ticket cards.">
+                        <h3 class="text-lg font-semibold mb-4">Shipping by Price Tier</h3>
+                        <div class="chart-container"><canvas id="chartShippingByPriceTier"></canvas></div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6" title="Average total buyer cost (sale price + shipping) by listing type. Key view for real profitability.">
+                        <h3 class="text-lg font-semibold mb-4">All-in Cost by Listing Type</h3>
+                        <div class="chart-container"><canvas id="chartTotalCostByListingType"></canvas></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/js/sidebar-nav.js"></script>
+    <script src="/js/sales-decision-signals.js"></script>
+    <script src="/js/sales-shipping-impact.js"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platform Mix - Trading Card Analytics</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-gray-50" data-page="sales-platform-mix">
+    <div class="flex h-screen">
+        <aside class="w-64 bg-gray-900 text-white flex-shrink-0">
+            <!-- Sidebar auto-populated by sidebar-nav.js -->
+        </aside>
+
+        <main class="flex-1 overflow-auto">
+            <div class="p-8">
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                        <i class="fas fa-globe text-blue-500 mr-2"></i>Platform Mix & Conversion
+                    </h1>
+                    <p class="text-gray-600">Where sales are happening, and how each marketplace performs.</p>
+                </div>
+
+                <div id="decisionSignals" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-4 mb-6"></div>
+
+                <div id="kpiCards" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8"></div>
+
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-lg shadow p-6" title="Number of completed sales by platform. Identifies where transaction volume concentrates.">
+                        <h3 class="text-lg font-semibold mb-4">Sales Volume by Platform</h3>
+                        <div class="chart-container"><canvas id="chartVolumeByPlatform"></canvas></div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6" title="Total dollar revenue by platform. Shows where higher gross sales value is generated.">
+                        <h3 class="text-lg font-semibold mb-4">Revenue by Platform</h3>
+                        <div class="chart-container"><canvas id="chartRevenueByPlatform"></canvas></div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6" title="Average sale price on each platform. Useful for comparing pricing power and buyer quality.">
+                        <h3 class="text-lg font-semibold mb-4">Avg Sale Price by Platform</h3>
+                        <div class="chart-container"><canvas id="chartAvgPriceByPlatform"></canvas></div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6" title="Composition of listing formats (Auction, BIN, etc.) within each platform.">
+                        <h3 class="text-lg font-semibold mb-4">Listing Type Mix by Platform</h3>
+                        <div class="chart-container"><canvas id="chartListingTypeByPlatform"></canvas></div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6" title="Average seller rating by platform. Indicates trust/quality profile of sellers per marketplace.">
+                        <h3 class="text-lg font-semibold mb-4">Seller Rating by Platform</h3>
+                        <div class="chart-container"><canvas id="chartRatingByPlatform"></canvas></div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6" title="Average shipping cost by platform. Helps evaluate hidden execution cost by marketplace.">
+                        <h3 class="text-lg font-semibold mb-4">Avg Shipping by Platform</h3>
+                        <div class="chart-container"><canvas id="chartShippingByPlatform"></canvas></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/js/sidebar-nav.js"></script>
+    <script src="/js/sales-decision-signals.js"></script>
+    <script src="/js/sales-platform-mix.js"></script>
+</body>
+</html>
