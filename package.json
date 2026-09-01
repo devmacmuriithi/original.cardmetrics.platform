@@ -1,15 +1,11 @@
 {
-  "name": "milestone1-spc-loader",
+  "name": "original-cardmetrics-platform",
   "version": "1.0.0",
-  "description": "Load SPC CSV files into Supabase and verify daily comparisons",
-  "main": "index.js",
+  "description": "Original Sports Cards Metrics Analytics Platform",
+  "main": "server.js",
   "scripts": {
-    "start": "node index.js",
-    "create-tables": "node create-tables.js",
-    "load-csv": "node load-csv.js",
-    "load-s3-sample": "node load-s3-sample.js",
-    "load-test-date": "node load-additional-date.js",
-    "verify": "node verify-comparisons.js"
+    "start": "node server.js",
+    "dev": "node server.js"
   },
   "keywords": [
     "supabase",
