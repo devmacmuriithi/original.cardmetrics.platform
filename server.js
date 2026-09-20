@@ -2749,65 +2749,83 @@ app.get('/api/dashboard', async (req, res) => {
   try {
     const client = await pool.connect();
     
-    const latestDate = await client.query('SELECT MAX(date) as latest FROM card_computed_metrics');
-    const date = latestDate.rows[0].latest;
-    
-    // Key metrics
+    // Key metrics from card_computed_metrics (falling back to cards/matched_cards_final if needed)
     const { rows: metrics } = await client.query(`
       SELECT 
         COUNT(DISTINCT ccm.card_id) as total_cards,
         COUNT(DISTINCT c.set_id) as total_sets,
-        ROUND(AVG(ccm.loose_price)::numeric, 2) as avg_card_price,
-        SUM(ccm.sales_volume)::bigint as total_volume,
-        COUNT(CASE WHEN ccm.trend_state = 'Rising' THEN 1 END) as rising_cards,
-        COUNT(CASE WHEN ccm.trend_state = 'Declining' THEN 1 END) as declining_cards,
-        COUNT(CASE WHEN ccm.trend_state = 'Stable' THEN 1 END) as stable_cards
+        ROUND(AVG(COALESCE(ccm.avg_price, ccm.loose_price, 0))::numeric, 2) as avg_card_price,
+        COALESCE(SUM(COALESCE(ccm.sales_volume, ccm.volume_30d, 0)), 0)::bigint as total_volume,
+        COUNT(CASE WHEN ccm.trend_state ILIKE '%rising%' OR ccm.trend_state ILIKE '%up%' THEN 1 END) as rising_cards,
+        COUNT(CASE WHEN ccm.trend_state ILIKE '%declining%' OR ccm.trend_state ILIKE '%down%' THEN 1 END) as declining_cards,
+        COUNT(CASE WHEN ccm.trend_state ILIKE '%stable%' OR ccm.trend_state ILIKE '%flat%' THEN 1 END) as stable_cards
       FROM card_computed_metrics ccm
-      LEFT JOIN cards c ON ccm.card_id = c.id
-      WHERE ccm.date = $1
-        AND ccm.loose_price IS NOT NULL
-    `, [date]);
+      LEFT JOIN cards c ON ccm.card_id::text = c.id::text
+    `);
     
-    // Top movers
+    // Top movers (calculated from recent sales deltas or computed metrics)
     const { rows: topMovers } = await client.query(`
+      WITH recent_sales AS (
+        SELECT 
+          card_id, 
+          sale_price, 
+          sale_date,
+          ROW_NUMBER() OVER (PARTITION BY card_id ORDER BY sale_date DESC) as rn_desc,
+          ROW_NUMBER() OVER (PARTITION BY card_id ORDER BY sale_date ASC) as rn_asc
+        FROM card_sales 
+        WHERE sale_price > 0
+      ),
+      card_diffs AS (
+        SELECT 
+          latest.card_id, 
+          latest.sale_price as latest_price,
+          ROUND(((latest.sale_price - earliest.sale_price) / earliest.sale_price * 100)::numeric, 2) as calc_pct
+        FROM (SELECT * FROM recent_sales WHERE rn_desc = 1) latest
+        JOIN (SELECT * FROM recent_sales WHERE rn_asc = 1) earliest ON latest.card_id = earliest.card_id
+        WHERE earliest.sale_price > 0 AND latest.sale_price != earliest.sale_price
+      )
       SELECT 
-        product_name,
-        console_name,
-        price_change_pct,
-        loose_price,
-        sales_volume
-      FROM card_computed_metrics
-      WHERE date = $1
-        AND price_change_pct IS NOT NULL
-        AND loose_price IS NOT NULL
-      ORDER BY ABS(price_change_pct) DESC
+        COALESCE(ccm.product_name, c.card_name) as product_name,
+        COALESCE(ccm.console_name, c.set_name) as console_name,
+        COALESCE(cd.latest_price, ccm.avg_price, 0) as loose_price,
+        COALESCE(cd.calc_pct, ccm.price_change_pct, ccm.price_change_30d, 0) as price_change_pct,
+        COALESCE(ccm.volume_30d, ccm.sales_volume, 1) as sales_volume
+      FROM card_diffs cd
+      JOIN cards c ON cd.card_id::text = c.id::text
+      LEFT JOIN card_computed_metrics ccm ON c.id::text = ccm.card_id::text
+      ORDER BY ABS(cd.calc_pct) DESC
       LIMIT 20
-    `, [date]);
+    `);
     
-    // Top sets
+    // Top sets by volume
     const { rows: topSets } = await client.query(`
       SELECT 
-        s.console_name,
+        COALESCE(s.console_name, ccm.console_name, 'Unknown Set') as console_name,
         COUNT(ccm.card_id) as card_count,
-        ROUND(AVG(ccm.loose_price)::numeric, 2) as avg_price,
-        SUM(ccm.sales_volume)::bigint as total_volume
-      FROM sets s
-      JOIN cards c ON s.id = c.set_id
-      JOIN card_computed_metrics ccm ON c.id = ccm.card_id
-      WHERE ccm.date = $1
-        AND ccm.loose_price IS NOT NULL
-      GROUP BY s.console_name
+        ROUND(AVG(COALESCE(ccm.loose_price, ccm.avg_price, 0))::numeric, 2) as avg_price,
+        COALESCE(SUM(COALESCE(ccm.sales_volume, ccm.volume_30d, 0)), 0)::bigint as total_volume
+      FROM card_computed_metrics ccm
+      LEFT JOIN cards c ON ccm.card_id::text = c.id::text
+      LEFT JOIN sets s ON c.set_id = s.id
+      GROUP BY COALESCE(s.console_name, ccm.console_name, 'Unknown Set')
       ORDER BY total_volume DESC
       LIMIT 10
-    `, [date]);
+    `);
     
     client.release();
     
     res.json({
-      date,
-      metrics: metrics[0],
-      topMovers,
-      topSets
+      metrics: metrics[0] || {
+        total_cards: 0,
+        total_sets: 0,
+        avg_card_price: 0,
+        total_volume: 0,
+        rising_cards: 0,
+        declining_cards: 0,
+        stable_cards: 0
+      },
+      topMovers: topMovers || [],
+      topSets: topSets || []
     });
   } catch (error) {
     console.error('Error fetching dashboard data:', error);

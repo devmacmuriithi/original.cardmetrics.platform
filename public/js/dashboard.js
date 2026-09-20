@@ -20,6 +20,18 @@ class Dashboard {
         console.log('Dashboard data received:', data);
         console.log('Top Movers count:', data.topMovers?.length);
         console.log('Metrics:', data.metrics);
+
+        const fmtNum = (v) => {
+            if (v === null || v === undefined || isNaN(Number(v))) return '0';
+            return Number(v).toLocaleString();
+        };
+        const fmtPrice = (v) => {
+            if (v === null || v === undefined || isNaN(Number(v))) return '0.00';
+            return Number(v).toFixed(2);
+        };
+        const metrics = data.metrics || {};
+        const topMovers = Array.isArray(data.topMovers) ? data.topMovers : [];
+        const topSets = Array.isArray(data.topSets) ? data.topSets : [];
         
         const html = `
             <div class="fade-in">
@@ -34,7 +46,7 @@ class Dashboard {
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-sm text-gray-600">Total Cards</p>
-                                <p class="text-2xl font-bold text-gray-900">${data.metrics.total_cards.toLocaleString()}</p>
+                                <p class="text-2xl font-bold text-gray-900">${fmtNum(metrics.total_cards)}</p>
                             </div>
                             <i class="fas fa-layer-group text-3xl text-blue-500"></i>
                         </div>
@@ -44,7 +56,7 @@ class Dashboard {
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-sm text-gray-600">Avg Card Price</p>
-                                <p class="text-2xl font-bold text-gray-900">$${data.metrics.avg_card_price}</p>
+                                <p class="text-2xl font-bold text-gray-900">$${fmtPrice(metrics.avg_card_price)}</p>
                             </div>
                             <i class="fas fa-dollar-sign text-3xl text-green-500"></i>
                         </div>
@@ -54,7 +66,7 @@ class Dashboard {
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-sm text-gray-600">Total Volume</p>
-                                <p class="text-2xl font-bold text-gray-900">${data.metrics.total_volume.toLocaleString()}</p>
+                                <p class="text-2xl font-bold text-gray-900">${fmtNum(metrics.total_volume)}</p>
                             </div>
                             <i class="fas fa-chart-line text-3xl text-purple-500"></i>
                         </div>
@@ -64,7 +76,7 @@ class Dashboard {
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-sm text-gray-600">Rising Cards</p>
-                                <p class="text-2xl font-bold text-green-600">${data.metrics.rising_cards.toLocaleString()}</p>
+                                <p class="text-2xl font-bold text-green-600">${fmtNum(metrics.rising_cards)}</p>
                             </div>
                             <i class="fas fa-arrow-trend-up text-3xl text-green-500"></i>
                         </div>
@@ -104,23 +116,25 @@ class Dashboard {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    ${data.topMovers.map(card => `
+                                    ${topMovers.map(card => {
+                                        const change = parseFloat(card.price_change_pct) || 0;
+                                        return `
                                         <tr class="border-b hover:bg-gray-50">
                                             <td class="py-2 px-2">
                                                 <div>
-                                                    <div class="font-medium whitespace-nowrap">${card.product_name}</div>
-                                                    <div class="text-sm text-gray-600 whitespace-nowrap">${card.console_name}</div>
+                                                    <div class="font-medium whitespace-nowrap">${card.product_name || 'Card'}</div>
+                                                    <div class="text-sm text-gray-600 whitespace-nowrap">${card.console_name || ''}</div>
                                                 </div>
                                             </td>
                                             <td class="text-right py-2 px-2 whitespace-nowrap">
-                                                <span class="${card.price_change_pct >= 0 ? 'text-green-600' : 'text-red-600'} font-medium">
-                                                    ${card.price_change_pct >= 0 ? '+' : ''}${card.price_change_pct}%
+                                                <span class="${change >= 0 ? 'text-green-600' : 'text-red-600'} font-medium">
+                                                    ${change >= 0 ? '+' : ''}${change.toFixed(1)}%
                                                 </span>
                                             </td>
-                                            <td class="text-right py-2 px-2 whitespace-nowrap">$${card.loose_price}</td>
-                                            <td class="text-right py-2 px-2 whitespace-nowrap">${card.sales_volume.toLocaleString()}</td>
+                                            <td class="text-right py-2 px-2 whitespace-nowrap">$${fmtPrice(card.loose_price)}</td>
+                                            <td class="text-right py-2 px-2 whitespace-nowrap">${fmtNum(card.sales_volume)}</td>
                                         </tr>
-                                    `).join('')}
+                                    `}).join('')}
                                 </tbody>
                             </table>
                         </div>
@@ -144,12 +158,12 @@ class Dashboard {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    ${data.topSets.map(set => `
+                                    ${topSets.map(set => `
                                         <tr class="border-b hover:bg-gray-50">
-                                            <td class="py-2 font-medium">${set.console_name}</td>
-                                            <td class="text-right py-2">${set.card_count.toLocaleString()}</td>
-                                            <td class="text-right py-2">$${set.avg_price}</td>
-                                            <td class="text-right py-2">${set.total_volume.toLocaleString()}</td>
+                                            <td class="py-2 font-medium">${set.console_name || 'Set'}</td>
+                                            <td class="text-right py-2">${fmtNum(set.card_count)}</td>
+                                            <td class="text-right py-2">$${fmtPrice(set.avg_price)}</td>
+                                            <td class="text-right py-2">${fmtNum(set.total_volume)}</td>
                                         </tr>
                                     `).join('')}
                                 </tbody>
