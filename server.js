@@ -12,6 +12,33 @@ const pool = new Pool({
   ssl: process.env.DATABASE_URL.includes('localhost') ? false : { rejectUnauthorized: false }
 });
 
+// Basic Authentication Middleware
+const basicAuth = (req, res, next) => {
+  if (req.path === '/health') return next();
+
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    res.setHeader('WWW-Authenticate', 'Basic realm="CardMetrics Original Platform"');
+    return res.status(401).send('Authentication required to access the original platform.');
+  }
+
+  const auth = Buffer.from(authHeader.split(' ')[1] || '', 'base64').toString().split(':');
+  const user = auth[0];
+  const pass = auth[1];
+
+  const validUser = process.env.ADMIN_USER || 'admin';
+  const validPass = process.env.ADMIN_PASSWORD || 'Admin@2026';
+
+  if (user === validUser && pass === validPass) {
+    return next();
+  }
+
+  res.setHeader('WWW-Authenticate', 'Basic realm="CardMetrics Original Platform"');
+  return res.status(401).send('Invalid credentials.');
+};
+
+app.use(basicAuth);
+
 const buildSalesWhere = (req) => {
   const {
     startDate = '',
@@ -2865,7 +2892,7 @@ app.use((req, res) => {
 });
 
 // Start server
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`🚀 Analytics server running at http://localhost:${port}`);
   console.log(`📊 Dashboard: http://localhost:${port}`);
   console.log(`🃏 Cards: http://localhost:${port}/cards`);
