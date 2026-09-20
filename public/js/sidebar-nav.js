@@ -144,6 +144,13 @@ function renderSidebar(activePage = '') {
                     </a>
                 </div>
             </div>
+
+            <div class="pt-6 mt-4 border-t border-gray-800">
+                <a href="/logout" class="sidebar-link block px-4 py-2.5 rounded-lg hover:bg-rose-900/40 text-rose-400 hover:text-rose-300 flex items-center space-x-3 transition">
+                    <i class="fas fa-sign-out-alt w-5"></i>
+                    <span>Sign Out</span>
+                </a>
+            </div>
         </nav>
     </div>
   `;

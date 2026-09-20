@@ -43,7 +43,7 @@ app.post('/login', (req, res) => {
   if (username === validUser && password === validPass) {
     const sessionToken = Buffer.from(`${username}:${validPass}:authorized`).toString('base64');
     res.setHeader('Set-Cookie', `cardmetrics_auth=${sessionToken}; Path=/; HttpOnly; SameSite=Lax; Max-Age=86400`);
-    return res.redirect('/');
+    return res.redirect('/dashboard');
   }
 
   return res.redirect('/login?error=invalid');
@@ -2936,7 +2936,11 @@ app.get(/^\/sets(?!\/api)/, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'sets.html'));
 });
 
-// Serve the main dashboard for root path only
+// Serve the main dashboard
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
