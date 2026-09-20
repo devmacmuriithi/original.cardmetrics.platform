@@ -12,32 +12,91 @@ const pool = new Pool({
   ssl: process.env.DATABASE_URL.includes('localhost') ? false : { rejectUnauthorized: false }
 });
 
-// Basic Authentication Middleware
-const basicAuth = (req, res, next) => {
-  if (req.path === '/health') return next();
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-  const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    res.setHeader('WWW-Authenticate', 'Basic realm="CardMetrics Original Platform"');
-    return res.status(401).send('Authentication required to access the original platform.');
-  }
+// Helper to parse cookies from headers
+const parseCookies = (req) => {
+  const list = {};
+  const cookieHeader = req.headers.cookie;
+  if (!cookieHeader) return list;
+  cookieHeader.split(';').forEach((cookie) => {
+    let [name, ...rest] = cookie.split('=');
+    name = name?.trim();
+    if (!name) return;
+    const value = rest.join('=').trim();
+    list[name] = decodeURIComponent(value);
+  });
+  return list;
+};
 
-  const auth = Buffer.from(authHeader.split(' ')[1] || '', 'base64').toString().split(':');
-  const user = auth[0];
-  const pass = auth[1];
+// Public & Login Routes
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
 
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
   const validUser = process.env.ADMIN_USER || 'admin';
   const validPass = process.env.ADMIN_PASSWORD || 'Admin@2026';
 
-  if (user === validUser && pass === validPass) {
+  if (username === validUser && password === validPass) {
+    const sessionToken = Buffer.from(`${username}:${validPass}:authorized`).toString('base64');
+    res.setHeader('Set-Cookie', `cardmetrics_auth=${sessionToken}; Path=/; HttpOnly; SameSite=Lax; Max-Age=86400`);
+    return res.redirect('/');
+  }
+
+  return res.redirect('/login?error=invalid');
+});
+
+app.get('/logout', (req, res) => {
+  res.setHeader('Set-Cookie', 'cardmetrics_auth=; Path=/; HttpOnly; Max-Age=0');
+  return res.redirect('/login');
+});
+
+// Authentication Guard Middleware
+const sessionAuth = (req, res, next) => {
+  // Allow health checks, login routes, and static assets (CSS, JS, images, fonts)
+  if (
+    req.path === '/health' ||
+    req.path === '/login' ||
+    req.path.startsWith('/css/') ||
+    req.path.startsWith('/js/') ||
+    req.path.startsWith('/images/') ||
+    req.path.startsWith('/favicon.ico')
+  ) {
     return next();
   }
 
-  res.setHeader('WWW-Authenticate', 'Basic realm="CardMetrics Original Platform"');
-  return res.status(401).send('Invalid credentials.');
+  // Check cookie session
+  const cookies = parseCookies(req);
+  const authCookie = cookies['cardmetrics_auth'];
+
+  const validUser = process.env.ADMIN_USER || 'admin';
+  const validPass = process.env.ADMIN_PASSWORD || 'Admin@2026';
+  const expectedToken = Buffer.from(`${validUser}:${validPass}:authorized`).toString('base64');
+
+  if (authCookie && authCookie === expectedToken) {
+    return next();
+  }
+
+  // Also support Basic Auth header if accessed via API/CLI
+  const authHeader = req.headers.authorization;
+  if (authHeader) {
+    const auth = Buffer.from(authHeader.split(' ')[1] || '', 'base64').toString().split(':');
+    if (auth[0] === validUser && auth[1] === validPass) {
+      return next();
+    }
+  }
+
+  if (req.path.startsWith('/api/')) {
+    return res.status(401).json({ error: 'Authentication required. Please sign in at /login' });
+  }
+
+  return res.redirect('/login');
 };
 
-app.use(basicAuth);
+app.use(sessionAuth);
 
 const buildSalesWhere = (req) => {
   const {
