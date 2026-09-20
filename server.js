@@ -123,15 +123,15 @@ const buildSalesWhere = (req) => {
     params.push(endDate);
   }
   if (platform) {
-    conditions.push(`platform = $${paramIndex++}`);
+    conditions.push(`COALESCE(platform, metadata->'raw_sale'->>'price_source', 'eBay') ILIKE $${paramIndex++}`);
     params.push(platform);
   }
   if (listingType) {
-    conditions.push(`listing_type = $${paramIndex++}`);
+    conditions.push(`COALESCE(listing_type, metadata->'raw_sale'->>'sale_type', CASE WHEN is_auction THEN 'Auction' ELSE 'BIN' END) ILIKE $${paramIndex++}`);
     params.push(listingType);
   }
   if (condition) {
-    conditions.push(`condition = $${paramIndex++}`);
+    conditions.push(`COALESCE(condition, condition_label, metadata->'raw_sale'->>'grade', 'Ungraded') ILIKE $${paramIndex++}`);
     params.push(condition);
   }
   if (minPrice) {
@@ -828,19 +828,22 @@ app.get('/api/sale-feed', async (req, res) => {
 
     if (search) {
       paramCount++;
-      whereConditions.push(`(listing_title ILIKE $${paramCount} OR platform_listing_id ILIKE $${paramCount})`);
+      whereConditions.push(`(
+        COALESCE(cs.listing_title, cs.metadata->'raw_sale'->>'title', c.card_name, '') ILIKE $${paramCount}
+        OR COALESCE(cs.platform_listing_id, cs.metadata->'raw_sale'->>'price_history_id', cs.external_sale_id, '') ILIKE $${paramCount}
+      )`);
       params.push(`%${search}%`);
     }
 
     if (platform) {
       paramCount++;
-      whereConditions.push(`platform = $${paramCount}`);
+      whereConditions.push(`COALESCE(cs.platform, cs.metadata->'raw_sale'->>'price_source', 'eBay') ILIKE $${paramCount}`);
       params.push(platform);
     }
 
     if (listingType) {
       paramCount++;
-      whereConditions.push(`listing_type = $${paramCount}`);
+      whereConditions.push(`COALESCE(cs.listing_type, cs.metadata->'raw_sale'->>'sale_type', CASE WHEN cs.is_auction THEN 'Auction' ELSE 'BIN' END) ILIKE $${paramCount}`);
       params.push(listingType);
     }
 
@@ -848,7 +851,8 @@ app.get('/api/sale-feed', async (req, res) => {
 
     const countQuery = `
       SELECT COUNT(*) as total
-      FROM card_sales
+      FROM card_sales cs
+      LEFT JOIN cards c ON cs.card_id::text = c.id::text
       ${whereClause}
     `;
 
@@ -857,27 +861,29 @@ app.get('/api/sale-feed', async (req, res) => {
     params.push(safeLimit, safeOffset);
     const dataQuery = `
       SELECT
-        id,
-        card_id,
-        sale_date,
-        sale_price,
-        currency,
-        platform,
-        platform_listing_id,
-        platform_url,
-        listing_type,
-        condition,
-        seller_rating,
-        seller_location,
-        quantity,
-        shipping_cost,
-        listing_title,
-        imported_at,
-        verified,
-        data_source
-      FROM card_sales
+        cs.id,
+        cs.card_id,
+        cs.sale_date,
+        cs.sale_price,
+        cs.currency,
+        COALESCE(cs.platform, cs.metadata->'raw_sale'->>'price_source', 'eBay') as platform,
+        COALESCE(cs.platform_listing_id, cs.metadata->'raw_sale'->>'price_history_id', cs.external_sale_id) as platform_listing_id,
+        COALESCE(cs.platform_url, cs.listing_url, cs.metadata->'raw_sale'->>'sale_url') as platform_url,
+        COALESCE(cs.listing_type, cs.metadata->'raw_sale'->>'sale_type', CASE WHEN cs.is_auction THEN 'Auction' ELSE 'BIN' END) as listing_type,
+        COALESCE(cs.condition, cs.condition_label, cs.metadata->'raw_sale'->>'grade', 'Ungraded') as condition,
+        cs.seller_rating,
+        cs.seller_location,
+        cs.quantity,
+        cs.shipping_cost,
+        COALESCE(cs.listing_title, cs.metadata->'raw_sale'->>'title', c.card_name, 'Card Sale') as listing_title,
+        cs.image_url,
+        cs.imported_at,
+        cs.verified,
+        COALESCE(cs.data_source, 'ALX') as data_source
+      FROM card_sales cs
+      LEFT JOIN cards c ON cs.card_id::text = c.id::text
       ${whereClause}
-      ORDER BY imported_at DESC NULLS LAST, id DESC
+      ORDER BY cs.sale_date DESC NULLS LAST, cs.imported_at DESC NULLS LAST, cs.id DESC
       LIMIT $${paramCount + 1} OFFSET $${paramCount + 2}
     `;
 

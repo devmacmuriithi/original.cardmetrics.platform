@@ -113,20 +113,34 @@ function renderTable() {
                 <tbody class="bg-white divide-y divide-gray-200">`;
 
     currentData.forEach(item => {
+        const imageThumb = item.image_url ? `<img src="${item.image_url}" alt="Card" class="w-10 h-14 object-cover rounded shadow-sm flex-shrink-0 mr-3 border border-gray-200">` : `<div class="w-10 h-14 bg-gray-100 rounded flex-shrink-0 mr-3 border border-gray-200 flex items-center justify-center text-gray-400 text-xs"><i class="fas fa-image"></i></div>`;
         html += `
             <tr class="hover:bg-gray-50">
                 <td class="px-4 py-3">
-                    <div class="text-sm font-medium text-gray-900">${item.listing_title || 'N/A'}</div>
-                    <div class="text-xs text-gray-500">ID: ${item.platform_listing_id || '-'}</div>
-                    ${item.platform_url ? `<a href="${item.platform_url}" target="_blank" class="text-xs text-blue-600 hover:text-blue-800">Open listing</a>` : ''}
+                    <div class="flex items-center">
+                        ${imageThumb}
+                        <div>
+                            <div class="text-sm font-medium text-gray-900 leading-snug">${item.listing_title || 'N/A'}</div>
+                            <div class="text-xs text-gray-500 mt-0.5">ID: ${item.platform_listing_id || '-'}</div>
+                            ${item.platform_url ? `<a href="${item.platform_url}" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-600 hover:text-blue-800 font-medium inline-block mt-0.5"><i class="fas fa-external-link-alt mr-1"></i>View Listing</a>` : ''}
+                        </div>
+                    </div>
                 </td>
-                <td class="px-4 py-3 text-sm text-gray-700">${item.platform || 'N/A'}</td>
-                <td class="px-4 py-3 text-right text-sm font-semibold text-gray-900">${item.sale_price != null ? `$${item.sale_price}` : 'N/A'}</td>
-                <td class="px-4 py-3 text-right text-sm text-gray-700">${item.shipping_cost != null ? `$${item.shipping_cost}` : '-'}</td>
-                <td class="px-4 py-3 text-sm text-gray-700">${item.listing_type || '-'}</td>
-                <td class="px-4 py-3 text-sm text-gray-700">${item.condition || '-'}</td>
+                <td class="px-4 py-3 text-sm text-gray-700 capitalize">${item.platform || 'N/A'}</td>
+                <td class="px-4 py-3 text-right text-sm font-semibold text-gray-900">${item.sale_price != null ? `$${Number(item.sale_price).toFixed(2)}` : 'N/A'}</td>
+                <td class="px-4 py-3 text-right text-sm text-gray-700">${item.shipping_cost != null ? `$${Number(item.shipping_cost).toFixed(2)}` : '-'}</td>
+                <td class="px-4 py-3 text-sm text-gray-700">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${item.listing_type === 'Auction' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800'}">
+                        ${item.listing_type || 'BIN'}
+                    </span>
+                </td>
+                <td class="px-4 py-3 text-sm text-gray-700">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                        ${item.condition || 'Ungraded'}
+                    </span>
+                </td>
                 <td class="px-4 py-3 text-right text-sm text-gray-700">${item.seller_rating != null ? item.seller_rating : '-'}</td>
-                <td class="px-4 py-3 text-sm text-gray-700">${item.imported_at ? new Date(item.imported_at).toLocaleString() : '-'}</td>
+                <td class="px-4 py-3 text-sm text-gray-700">${item.sale_date ? new Date(item.sale_date).toLocaleDateString() : (item.imported_at ? new Date(item.imported_at).toLocaleDateString() : '-')}</td>
             </tr>`;
     });
 
