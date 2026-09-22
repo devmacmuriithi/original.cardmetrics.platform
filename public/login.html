@@ -1,105 +1,89 @@
-﻿<!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-950">
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-gray-50">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In | Sports Card Metrics (Original Platform)</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    </style>
+    <title>Login - Card Analytics</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
-<body class="h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-slate-950 text-slate-100 antialiased selection:bg-blue-600 selection:text-white">
-    <!-- Background glow -->
-    <div class="fixed inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute -top-40 -left-40 w-96 h-96 bg-blue-600/20 rounded-full blur-[128px]"></div>
-        <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-indigo-600/20 rounded-full blur-[128px]"></div>
-    </div>
-
-    <div class="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
-        <!-- Logo Header -->
+<body class="h-full bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 text-gray-900">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+        <!-- Brand Header matching Original Sidebar -->
         <div class="text-center">
-            <div class="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 shadow-xl shadow-blue-500/25 border border-white/20 mb-4">
-                <i class="fas fa-layer-group text-2xl text-white"></i>
+            <div class="inline-flex items-center justify-center h-12 w-12 rounded-lg bg-gray-900 text-blue-400 mb-3 shadow">
+                <i class="fas fa-chart-line text-xl"></i>
             </div>
-            <h1 class="text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
-                Sports Card Metrics
-            </h1>
-            <p class="mt-2 text-xs font-semibold uppercase tracking-widest text-blue-400">
-                Original Platform Archive · v1.0
+            <h2 class="text-2xl font-bold text-gray-900">
+                Card Analytics
+            </h2>
+            <p class="mt-1 text-sm text-gray-600">
+                Sign in to access your platform dashboard
             </p>
         </div>
 
         <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-            <div class="bg-slate-900/80 backdrop-blur-xl py-8 px-6 shadow-2xl border border-slate-800 rounded-3xl sm:px-10">
+            <div class="bg-white py-8 px-4 shadow-sm border border-gray-200 sm:rounded-lg sm:px-10">
                 <!-- Error Alert -->
-                <div id="error-alert" class="hidden mb-6 rounded-xl bg-rose-500/10 border border-rose-500/30 p-4 text-xs font-medium text-rose-300 flex items-center gap-2.5">
-                    <i class="fas fa-circle-exclamation text-rose-400 text-sm"></i>
-                    <span>Invalid credentials. Please enter valid admin credentials.</span>
+                <div id="error-alert" class="hidden mb-5 bg-red-50 border-l-4 border-red-500 p-3 text-sm text-red-700">
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-circle mr-2 text-red-500"></i>
+                        <span>Invalid username or password. Please try again.</span>
+                    </div>
                 </div>
 
-                <form class="space-y-5" action="/login" method="POST">
+                <form class="space-y-6" action="/login" method="POST">
                     <div>
-                        <label for="username" class="block text-xs font-bold uppercase tracking-wider text-slate-300">
-                            Username / Email
+                        <label for="username" class="block text-sm font-medium text-gray-700">
+                            Username
                         </label>
-                        <div class="mt-1.5 relative">
-                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
-                                <i class="fas fa-user text-xs"></i>
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                                <i class="fas fa-user text-sm"></i>
                             </div>
                             <input id="username" name="username" type="text" required autofocus
                                 value="admin"
-                                class="block w-full pl-10 pr-3 py-2.5 bg-slate-950/80 border border-slate-800 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                                class="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 border px-3"
                                 placeholder="admin" />
                         </div>
                     </div>
 
                     <div>
-                        <label for="password" class="block text-xs font-bold uppercase tracking-wider text-slate-300">
+                        <label for="password" class="block text-sm font-medium text-gray-700">
                             Password
                         </label>
-                        <div class="mt-1.5 relative">
-                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
-                                <i class="fas fa-lock text-xs"></i>
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                                <i class="fas fa-lock text-sm"></i>
                             </div>
                             <input id="password" name="password" type="password" required
                                 value="Admin@2026"
-                                class="block w-full pl-10 pr-10 py-2.5 bg-slate-950/80 border border-slate-800 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                                class="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 pr-10 sm:text-sm border-gray-300 rounded-md py-2 border px-3"
                                 placeholder="••••••••" />
-                            <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-500 hover:text-slate-300">
-                                <i id="eye-icon" class="fas fa-eye text-xs"></i>
+                            <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
+                                <i id="eye-icon" class="fas fa-eye text-sm"></i>
                             </button>
                         </div>
                     </div>
 
-                    <div class="pt-2">
+                    <div>
                         <button type="submit"
-                            class="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-xl shadow-lg shadow-blue-600/30 text-sm font-bold text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150">
-                            <span>Sign In to Platform</span>
-                            <i class="fas fa-arrow-right text-xs"></i>
+                            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150">
+                            Sign in
                         </button>
                     </div>
                 </form>
 
-                <!-- Credentials helper note -->
-                <div class="mt-6 pt-5 border-t border-slate-800/80">
-                    <div class="rounded-xl bg-slate-950/50 p-3.5 border border-slate-800 text-[11px] text-slate-400">
-                        <div class="flex items-center justify-between font-semibold text-slate-300 mb-1">
-                            <span>Default Access Credentials:</span>
-                            <span class="px-1.5 py-0.5 rounded text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Active</span>
-                        </div>
-                        <div class="font-mono text-slate-300 text-xs">Username: <span class="text-blue-400 font-bold">admin</span></div>
-                        <div class="font-mono text-slate-300 text-xs">Password: <span class="text-blue-400 font-bold">Admin@2026</span></div>
-                    </div>
+                <!-- Clean subtle credentials reminder -->
+                <div class="mt-6 pt-4 border-t border-gray-100 text-xs text-gray-500 text-center">
+                    Default access: <span class="font-mono text-gray-700 font-semibold">admin</span> / <span class="font-mono text-gray-700 font-semibold">Admin@2026</span>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Check for error in query params
         const params = new URLSearchParams(window.location.search);
         if (params.get('error') === 'invalid') {
             document.getElementById('error-alert').classList.remove('hidden');
