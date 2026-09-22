@@ -2106,26 +2106,43 @@ app.get('/api/intelligence/dashboard', async (req, res) => {
 // Specific card routes MUST come before /api/cards/:id
 app.get('/api/cards/top-movers', async (req, res) => {
   try {
+    const limit = Math.min(parseInt(req.query.limit || 50), 100);
     const client = await pool.connect();
-    const latestDate = await client.query('SELECT MAX(date) as latest FROM card_computed_metrics');
-    const date = latestDate.rows[0].latest;
     
     const { rows } = await client.query(`
+      WITH recent_sales AS (
+        SELECT 
+          card_id, 
+          sale_price, 
+          sale_date,
+          ROW_NUMBER() OVER (PARTITION BY card_id ORDER BY sale_date DESC) as rn_desc,
+          ROW_NUMBER() OVER (PARTITION BY card_id ORDER BY sale_date ASC) as rn_asc
+        FROM card_sales 
+        WHERE sale_price > 0
+      ),
+      card_diffs AS (
+        SELECT 
+          latest.card_id, 
+          latest.sale_price as latest_price,
+          ROUND(((latest.sale_price - earliest.sale_price) / earliest.sale_price * 100)::numeric, 2) as calc_pct
+        FROM (SELECT * FROM recent_sales WHERE rn_desc = 1) latest
+        JOIN (SELECT * FROM recent_sales WHERE rn_asc = 1) earliest ON latest.card_id = earliest.card_id
+        WHERE earliest.sale_price > 0 AND latest.sale_price != earliest.sale_price
+      )
       SELECT 
-        card_id,
-        product_name,
-        console_name,
-        price_change_pct,
-        loose_price,
-        sales_volume,
-        trend_state
-      FROM card_computed_metrics
-      WHERE date = $1
-        AND price_change_pct IS NOT NULL
-        AND loose_price IS NOT NULL
-      ORDER BY ABS(price_change_pct) DESC
-      LIMIT 50
-    `, [date]);
+        c.id as card_id,
+        COALESCE(ccm.product_name, c.card_name) as product_name,
+        COALESCE(ccm.console_name, c.set_name, 'Standard') as console_name,
+        ROUND(COALESCE(cd.latest_price, ccm.avg_price, ccm.loose_price, 0)::numeric, 2) as loose_price,
+        COALESCE(cd.calc_pct, ccm.price_change_pct, ccm.price_change_30d, 0) as price_change_pct,
+        COALESCE(ccm.volume_30d, ccm.sales_volume, 1) as sales_volume,
+        COALESCE(ccm.trend_state, CASE WHEN cd.calc_pct > 0 THEN 'up' ELSE 'down' END) as trend_state
+      FROM card_diffs cd
+      JOIN cards c ON cd.card_id::text = c.id::text
+      LEFT JOIN card_computed_metrics ccm ON c.id::text = ccm.card_id::text
+      ORDER BY ABS(cd.calc_pct) DESC
+      LIMIT $1
+    `, [limit]);
     
     client.release();
     res.json(rows);

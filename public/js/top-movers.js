@@ -90,27 +90,30 @@ function renderTable() {
                 <tbody class="bg-white divide-y divide-gray-200">`;
     
     filteredData.forEach(card => {
-        const changeClass = card.price_change_pct >= 0 ? 'text-green-600' : 'text-red-600';
-        const changeIcon = card.price_change_pct >= 0 ? 'fa-arrow-up' : 'fa-arrow-down';
+        const pct = typeof card.price_change_pct === 'number' ? card.price_change_pct : parseFloat(card.price_change_pct || 0);
+        const changeClass = pct >= 0 ? 'text-green-600' : 'text-red-600';
+        const changeIcon = pct >= 0 ? 'fa-arrow-up' : 'fa-arrow-down';
         const detailHref = card.card_id || card.id ? `/card-detail/${card.card_id || card.id}` : '';
+        const loosePrice = typeof card.loose_price === 'number' ? card.loose_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : (parseFloat(card.loose_price || 0)).toFixed(2);
+        const salesVolume = (card.sales_volume || 0).toLocaleString();
         
         html += `
             <tr class="hover:bg-gray-50">
                 <td class="px-6 py-4">
-                    <div class="text-sm font-medium text-gray-900">${card.product_name}</div>
+                    <div class="text-sm font-medium text-gray-900">${card.product_name || 'Card'}</div>
                 </td>
-                <td class="px-6 py-4 text-sm text-gray-600">${card.console_name}</td>
+                <td class="px-6 py-4 text-sm text-gray-600">${card.console_name || 'Set'}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-right">
                     <span class="${changeClass} font-bold text-lg flex items-center justify-end">
                         <i class="fas ${changeIcon} mr-1"></i>
-                        ${card.price_change_pct >= 0 ? '+' : ''}${card.price_change_pct}%
+                        ${pct >= 0 ? '+' : ''}${pct.toFixed(1)}%
                     </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-semibold text-gray-900">
-                    $${card.loose_price}
+                    $${loosePrice}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-900">
-                    ${card.sales_volume.toLocaleString()}
+                    ${salesVolume}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center">
                     ${detailHref
