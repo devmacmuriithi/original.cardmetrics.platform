@@ -88,15 +88,7 @@ function renderSidebar(activePage = '') {
                 <div class="mt-2 space-y-1">
                     <a href="/sets" class="sidebar-link block px-4 py-2 rounded ${activePage === 'sets' ? 'bg-gray-800' : 'hover:bg-gray-800'} flex items-center space-x-3">
                         <i class="fas fa-layer-group w-5"></i>
-                        <span>All Sets</span>
-                    </a>
-                    <a href="/sets/performance" class="sidebar-link block px-4 py-2 rounded ${activePage === 'sets-performance' ? 'bg-gray-800' : 'hover:bg-gray-800'} flex items-center space-x-3">
-                        <i class="fas fa-chart-bar w-5"></i>
-                        <span>Performance</span>
-                    </a>
-                    <a href="/sets/liquidity" class="sidebar-link block px-4 py-2 rounded ${activePage === 'sets-liquidity' ? 'bg-gray-800' : 'hover:bg-gray-800'} flex items-center space-x-3">
-                        <i class="fas fa-water w-5"></i>
-                        <span>Liquidity</span>
+                        <span>Sets Analytics</span>
                     </a>
                 </div>
             </div>
@@ -106,44 +98,15 @@ function renderSidebar(activePage = '') {
                 <div class="mt-2 space-y-1">
                     <a href="/cards" class="sidebar-link block px-4 py-2 rounded ${activePage === 'cards' ? 'bg-gray-800' : 'hover:bg-gray-800'} flex items-center space-x-3">
                         <i class="fas fa-th-large w-5"></i>
-                        <span>All Cards</span>
+                        <span>Cards Analytics</span>
                     </a>
                     <a href="/cards/top-movers" class="sidebar-link block px-4 py-2 rounded ${activePage === 'cards-top-movers' ? 'bg-gray-800' : 'hover:bg-gray-800'} flex items-center space-x-3">
-                        <i class="fas fa-fire w-5"></i>
+                        <i class="fas fa-fire w-5 text-red-400"></i>
                         <span>Top Movers</span>
-                    </a>
-                    <a href="/cards/volatility" class="sidebar-link block px-4 py-2 rounded ${activePage === 'cards-volatility' ? 'bg-gray-800' : 'hover:bg-gray-800'} flex items-center space-x-3">
-                        <i class="fas fa-chart-area w-5"></i>
-                        <span>Volatility Analysis</span>
-                    </a>
-                    <a href="/cards/premium" class="sidebar-link block px-4 py-2 rounded ${activePage === 'cards-premium' ? 'bg-gray-800' : 'hover:bg-gray-800'} flex items-center space-x-3">
-                        <i class="fas fa-gem w-5"></i>
-                        <span>Grading Premium</span>
                     </a>
                 </div>
             </div>
 
-            <div class="pt-4">
-                <h3 class="px-4 text-xs font-semibold text-indigo-300 uppercase tracking-wider">Indices</h3>
-                <div class="mt-2 space-y-1">
-                    <a href="/indices/set" class="sidebar-link block px-4 py-2 rounded ${activePage === 'indices-set' ? 'bg-gray-800' : 'hover:bg-gray-800'} flex items-center space-x-3">
-                        <i class="fas fa-layer-group w-5 text-indigo-300"></i>
-                        <span>Set Index</span>
-                    </a>
-                    <a href="/indices/player" class="sidebar-link block px-4 py-2 rounded ${activePage === 'indices-player' ? 'bg-gray-800' : 'hover:bg-gray-800'} flex items-center space-x-3">
-                        <i class="fas fa-user-astronaut w-5 text-indigo-300"></i>
-                        <span>Player Index</span>
-                    </a>
-                    <a href="/indices/grade" class="sidebar-link block px-4 py-2 rounded ${activePage === 'indices-grade' ? 'bg-gray-800' : 'hover:bg-gray-800'} flex items-center space-x-3">
-                        <i class="fas fa-certificate w-5 text-indigo-300"></i>
-                        <span>Grade Index</span>
-                    </a>
-                    <a href="/indices/market" class="sidebar-link block px-4 py-2 rounded ${activePage === 'indices-market' ? 'bg-gray-800' : 'hover:bg-gray-800'} flex items-center space-x-3">
-                        <i class="fas fa-chart-area w-5 text-indigo-300"></i>
-                        <span>Market Index</span>
-                    </a>
-                </div>
-            </div>
 
             <div class="pt-6 mt-4 border-t border-gray-800">
                 <a href="/logout" class="sidebar-link block px-4 py-2.5 rounded-lg hover:bg-rose-900/40 text-rose-400 hover:text-rose-300 flex items-center space-x-3 transition">

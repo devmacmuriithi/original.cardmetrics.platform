@@ -2238,82 +2238,94 @@ app.get('/api/cards', async (req, res) => {
       minMomentum,
       maxMomentum,
       minOpportunity,
-      maxOpportunity,
-      riskLevel
+      sortBy = 'opportunity_score'
     } = req.query;
     
     const client = await pool.connect();
     
-    const conditions = ['ccm.loose_price IS NOT NULL'];
+    const conditions = ['COALESCE(ccm.loose_price, ccm.avg_price, 0) > 0'];
     const params = [];
     let paramIndex = 1;
     
     if (search) {
-      conditions.push(`(ccm.product_name ILIKE $${paramIndex} OR ccm.console_name ILIKE $${paramIndex})`);
+      conditions.push(`(ccm.product_name ILIKE $${paramIndex} OR ccm.console_name ILIKE $${paramIndex} OR c.card_name ILIKE $${paramIndex} OR c.set_name ILIKE $${paramIndex})`);
       params.push(`%${search}%`);
       paramIndex++;
     }
     
     if (trendState) {
-      conditions.push(`ccm.trend_state = $${paramIndex}`);
-      params.push(trendState);
-      paramIndex++;
+      if (trendState.toLowerCase() === 'rising') {
+        conditions.push(`(ccm.trend_state ILIKE '%up%' OR ccm.trend_state ILIKE '%rising%')`);
+      } else if (trendState.toLowerCase() === 'declining') {
+        conditions.push(`(ccm.trend_state ILIKE '%down%' OR ccm.trend_state ILIKE '%declining%')`);
+      } else if (trendState.toLowerCase() === 'stable') {
+        conditions.push(`(ccm.trend_state ILIKE '%flat%' OR ccm.trend_state ILIKE '%stable%')`);
+      }
     }
     
     if (minLiquidity) {
-      conditions.push(`(ccm.sales_volume / 100.0) >= $${paramIndex}`);
+      conditions.push(`COALESCE(ccm.liquidity_score, LEAST(COALESCE(ccm.sales_volume, ccm.volume_30d, 0) / 100.0, 1.0)) >= $${paramIndex}`);
       params.push(Number(minLiquidity));
       paramIndex++;
     }
     
     if (maxLiquidity) {
-      conditions.push(`(ccm.sales_volume / 100.0) <= $${paramIndex}`);
+      conditions.push(`COALESCE(ccm.liquidity_score, LEAST(COALESCE(ccm.sales_volume, ccm.volume_30d, 0) / 100.0, 1.0)) <= $${paramIndex}`);
       params.push(Number(maxLiquidity));
       paramIndex++;
     }
     
     if (minMomentum) {
-      conditions.push(`ccm.price_change_pct >= $${paramIndex}`);
+      conditions.push(`COALESCE(ccm.momentum, ccm.price_change_pct, 0) >= $${paramIndex}`);
       params.push(Number(minMomentum));
       paramIndex++;
     }
     
     if (maxMomentum) {
-      conditions.push(`ccm.price_change_pct <= $${paramIndex}`);
+      conditions.push(`COALESCE(ccm.momentum, ccm.price_change_pct, 0) <= $${paramIndex}`);
       params.push(Number(maxMomentum));
       paramIndex++;
     }
     
     const whereClause = conditions.join(' AND ');
     
+    const sortField = ['momentum', 'liquidity_score', 'loose_price'].includes(sortBy) 
+      ? sortBy 
+      : 'opportunity_score';
+
     const query = `
       WITH latest_metrics AS (
         SELECT DISTINCT ON (ccm.card_id)
           ccm.card_id,
-          ccm.product_name,
-          ccm.console_name,
-          ccm.loose_price,
-          ccm.sales_volume,
-          ccm.price_change_pct,
-          ccm.trend_state,
+          COALESCE(ccm.product_name, c.card_name, c.raw_product_name, 'Unknown Card') as product_name,
+          COALESCE(ccm.console_name, c.set_name, 'Unknown Set') as console_name,
+          ROUND(COALESCE(ccm.loose_price, ccm.avg_price, 0)::numeric, 2) as loose_price,
+          ROUND(COALESCE(ccm.psa10_price, ccm.graded_price, 0)::numeric, 2) as psa10_price,
+          COALESCE(ccm.sales_volume, ccm.volume_30d, 0) as sales_volume,
+          COALESCE(ccm.price_change_30d, ccm.price_change_pct, 0) as price_change_30d,
+          CASE 
+            WHEN ccm.trend_state ILIKE '%up%' OR ccm.trend_state ILIKE '%rising%' THEN 'Rising'
+            WHEN ccm.trend_state ILIKE '%down%' OR ccm.trend_state ILIKE '%declining%' THEN 'Declining'
+            ELSE 'Stable'
+          END as trend_state,
           ccm.date,
-          -- Calculated metrics from available columns
-          LEAST(ccm.sales_volume / 100.0, 1.0) as liquidity_score,
-          ccm.price_change_pct as momentum,
-          ABS(ccm.price_change_pct) as volatility,
-          -- Opportunity Score (simplified based on available columns)
+          COALESCE(ccm.momentum, ccm.price_change_pct, 0) as momentum,
+          COALESCE(ccm.liquidity_score, LEAST(COALESCE(ccm.sales_volume, ccm.volume_30d, 0) / 100.0, 1.0)) as liquidity_score,
+          ROUND(GREATEST(1, 30.0 / NULLIF(COALESCE(ccm.sales_volume, ccm.volume_30d, 1), 0))::numeric, 1) as days_to_liquidity,
+          COALESCE(ccm.volatility, ABS(COALESCE(ccm.price_change_pct, 0))) as volatility,
+          CASE 
+            WHEN ABS(COALESCE(ccm.price_change_pct, 0)) > 25 THEN 'High Volatility'
+            WHEN ABS(COALESCE(ccm.price_change_pct, 0)) > 10 THEN 'Medium Volatility'
+            ELSE 'Low Volatility'
+          END as volatility_regime,
+          COALESCE(ccm.comp_quality_score, 85) as data_confidence_score,
           LEAST(100, GREATEST(0, ROUND((
-            CASE WHEN ccm.trend_state = 'Rising' THEN 50 ELSE 0 END +
-            (LEAST(ccm.sales_volume / 100.0, 1.0) * 30) +
+            CASE WHEN ccm.trend_state ILIKE '%up%' OR ccm.trend_state ILIKE '%rising%' THEN 50 ELSE 0 END +
+            (LEAST(COALESCE(ccm.sales_volume, ccm.volume_30d, 0) / 100.0, 1.0) * 30) +
             (COALESCE(ccm.price_change_pct, 0) * 20)
-          )::numeric, 0))) as opportunity_score,
-          -- Risk level
-          CASE
-            WHEN ABS(ccm.price_change_pct) > 25 THEN 'High'
-            WHEN ABS(ccm.price_change_pct) > 10 THEN 'Medium'
-            ELSE 'Low'
-          END as risk_level
+          )::numeric, 0))) as opportunity_score
         FROM card_computed_metrics ccm
+        LEFT JOIN cards c ON ccm.card_id::text = c.id::text
         WHERE ${whereClause}
         ORDER BY ccm.card_id, ccm.date DESC
       )
@@ -2321,18 +2333,19 @@ app.get('/api/cards', async (req, res) => {
         *,
         COUNT(*) OVER() as total_count
       FROM latest_metrics
-      ORDER BY opportunity_score DESC, loose_price DESC
+      ${minOpportunity ? `WHERE opportunity_score >= ${Number(minOpportunity)}` : ''}
+      ORDER BY ${sortField} DESC, loose_price DESC
       LIMIT $${paramIndex} OFFSET $${paramIndex + 1}
     `;
     
-    params.push(limit, offset);
+    params.push(parseInt(limit), parseInt(offset));
     const { rows } = await client.query(query, params);
     
     client.release();
     
     res.json({
       cards: rows,
-      total: rows.length > 0 ? rows[0].total_count : 0,
+      total: rows.length > 0 ? parseInt(rows[0].total_count) : 0,
       limit: parseInt(limit),
       offset: parseInt(offset)
     });
@@ -2352,43 +2365,43 @@ app.get('/api/cards/:id', async (req, res) => {
     const { rows: [card] } = await client.query(`
       SELECT 
         ccm.card_id,
-        ccm.product_name,
-        ccm.console_name,
-        ccm.loose_price,
-        ccm.sales_volume,
-        ccm.price_change_pct,
-        ccm.trend_state,
+        COALESCE(ccm.product_name, c.card_name, c.raw_product_name, 'Unknown Card') as product_name,
+        COALESCE(ccm.console_name, c.set_name, 'Unknown Set') as console_name,
+        ROUND(COALESCE(ccm.loose_price, ccm.avg_price, 0)::numeric, 2) as loose_price,
+        ROUND(COALESCE(ccm.psa10_price, ccm.graded_price, 0)::numeric, 2) as psa10_price,
+        COALESCE(ccm.sales_volume, ccm.volume_30d, 0) as sales_volume,
+        COALESCE(ccm.price_change_pct, 0) as price_change_pct,
+        CASE 
+          WHEN ccm.trend_state ILIKE '%up%' OR ccm.trend_state ILIKE '%rising%' THEN 'Rising'
+          WHEN ccm.trend_state ILIKE '%down%' OR ccm.trend_state ILIKE '%declining%' THEN 'Declining'
+          ELSE 'Stable'
+        END as trend_state,
         ccm.date,
         -- Calculated metrics
-        ccm.price_change_pct as momentum,
-        LEAST(ccm.sales_volume / 100.0, 1.0) as liquidity_score,
-        ABS(ccm.price_change_pct) as volatility,
-        -- Opportunity Score (simplified)
+        COALESCE(ccm.momentum, ccm.price_change_pct, 0) as momentum,
+        COALESCE(ccm.liquidity_score, LEAST(COALESCE(ccm.sales_volume, ccm.volume_30d, 0) / 100.0, 1.0)) as liquidity_score,
+        COALESCE(ccm.volatility, ABS(COALESCE(ccm.price_change_pct, 0))) as volatility,
+        -- Opportunity Score
         LEAST(100, GREATEST(0, ROUND((
-          CASE WHEN ccm.trend_state = 'Rising' THEN 50 ELSE 0 END +
-          (LEAST(ccm.sales_volume / 100.0, 1.0) * 30) +
+          CASE WHEN ccm.trend_state ILIKE '%up%' OR ccm.trend_state ILIKE '%rising%' THEN 50 ELSE 0 END +
+          (LEAST(COALESCE(ccm.sales_volume, ccm.volume_30d, 0) / 100.0, 1.0) * 30) +
           (COALESCE(ccm.price_change_pct, 0) * 20)
         )::numeric, 0))) as opportunity_score,
         -- Risk Metrics
         CASE
-          WHEN ABS(ccm.price_change_pct) > 25 THEN 'High'
-          WHEN ABS(ccm.price_change_pct) > 10 THEN 'Medium'
+          WHEN ABS(COALESCE(ccm.price_change_pct, 0)) > 25 THEN 'High'
+          WHEN ABS(COALESCE(ccm.price_change_pct, 0)) > 10 THEN 'Medium'
           ELSE 'Low'
         END as risk_level,
         CASE
-          WHEN ccm.price_change_pct < -5 THEN 'High'
-          WHEN ccm.price_change_pct < 0 THEN 'Medium'
+          WHEN COALESCE(ccm.price_change_pct, 0) < -5 THEN 'High'
+          WHEN COALESCE(ccm.price_change_pct, 0) < 0 THEN 'Medium'
           ELSE 'Low'
         END as trend_break_risk,
-        CASE
-          WHEN ccm.sales_volume >= 100 THEN 95
-          WHEN ccm.sales_volume >= 50 THEN 80
-          WHEN ccm.sales_volume >= 20 THEN 60
-          WHEN ccm.sales_volume >= 10 THEN 40
-          ELSE 20
-        END as data_confidence_score
+        COALESCE(ccm.comp_quality_score, 85) as data_confidence_score
       FROM card_computed_metrics ccm
-      WHERE ccm.card_id = $1
+      LEFT JOIN cards c ON ccm.card_id::text = c.id::text
+      WHERE ccm.card_id::text = $1::text
       ORDER BY ccm.date DESC
       LIMIT 1
     `, [id]);
@@ -2397,14 +2410,18 @@ app.get('/api/cards/:id', async (req, res) => {
     const { rows: history } = await client.query(`
       SELECT 
         date,
-        loose_price,
-        sales_volume,
-        price_change_pct,
-        trend_state,
-        price_change_pct as momentum,
-        LEAST(sales_volume / 100.0, 1.0) as liquidity_score
+        ROUND(COALESCE(loose_price, avg_price, 0)::numeric, 2) as loose_price,
+        COALESCE(sales_volume, volume_30d, 0) as sales_volume,
+        COALESCE(price_change_pct, 0) as price_change_pct,
+        CASE 
+          WHEN trend_state ILIKE '%up%' OR trend_state ILIKE '%rising%' THEN 'Rising'
+          WHEN trend_state ILIKE '%down%' OR trend_state ILIKE '%declining%' THEN 'Declining'
+          ELSE 'Stable'
+        END as trend_state,
+        COALESCE(momentum, price_change_pct, 0) as momentum,
+        COALESCE(liquidity_score, LEAST(COALESCE(sales_volume, volume_30d, 0) / 100.0, 1.0)) as liquidity_score
       FROM card_computed_metrics
-      WHERE card_id = $1
+      WHERE card_id::text = $1::text
         AND date >= CURRENT_DATE - INTERVAL '${days} days'
       ORDER BY date ASC
     `, [id]);
@@ -2431,7 +2448,7 @@ app.get('/api/sets', async (req, res) => {
     
     const client = await pool.connect();
     
-    const conditions = ['ccm.loose_price IS NOT NULL'];
+    const conditions = [];
     const params = [];
     let paramIndex = 1;
     
@@ -2441,46 +2458,43 @@ app.get('/api/sets', async (req, res) => {
       paramIndex++;
     }
     
-    const whereClause = conditions.join(' AND ');
+    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
     
     const query = `
       WITH set_metrics AS (
         SELECT 
           s.id,
-          s.console_name,
+          COALESCE(s.console_name, s.name, 'Unknown Set') as console_name,
           s.name,
-          COUNT(ccm.card_id) as card_count,
-          ROUND(AVG(ccm.loose_price)::numeric, 2) as avg_price,
-          ROUND(MAX(ccm.loose_price)::numeric, 2) as max_price,
-          ROUND(MIN(ccm.loose_price)::numeric, 2) as min_price,
-          SUM(ccm.sales_volume)::bigint as total_volume,
-          COUNT(CASE WHEN ccm.trend_state = 'Rising' THEN 1 END) as rising_count,
-          COUNT(CASE WHEN ccm.trend_state = 'Declining' THEN 1 END) as declining_count,
-          COUNT(CASE WHEN ccm.trend_state = 'Stable' THEN 1 END) as stable_count,
-          AVG(ccm.price_change_pct) as avg_momentum,
-          AVG(LEAST(ccm.sales_volume / 100.0, 1.0)) as avg_liquidity,
-          AVG(ABS(ccm.price_change_pct)) as avg_volatility,
+          COUNT(DISTINCT c.id)::int as card_count,
+          ROUND(AVG(COALESCE(ccm.loose_price, ccm.avg_price, 0))::numeric, 2) as avg_price,
+          ROUND(MAX(COALESCE(ccm.loose_price, ccm.avg_price, 0))::numeric, 2) as max_price,
+          ROUND(MIN(COALESCE(ccm.loose_price, ccm.avg_price, 0))::numeric, 2) as min_price,
+          COALESCE(SUM(COALESCE(ccm.sales_volume, ccm.volume_30d, 0)), 0)::bigint as total_volume,
+          COUNT(CASE WHEN ccm.trend_state ILIKE '%up%' OR ccm.trend_state ILIKE '%rising%' THEN 1 END) as rising_count,
+          COUNT(CASE WHEN ccm.trend_state ILIKE '%down%' OR ccm.trend_state ILIKE '%declining%' THEN 1 END) as declining_count,
+          COUNT(CASE WHEN ccm.trend_state ILIKE '%flat%' OR ccm.trend_state ILIKE '%stable%' THEN 1 END) as stable_count,
+          COALESCE(AVG(ccm.price_change_pct), 0) as avg_momentum,
+          COALESCE(AVG(LEAST(COALESCE(ccm.sales_volume, ccm.volume_30d, 0) / 100.0, 1.0)), 0.5) as avg_liquidity,
+          COALESCE(AVG(ABS(COALESCE(ccm.price_change_pct, 0))), 0) as avg_volatility,
           MAX(ccm.date) as last_updated,
-          -- Opportunity Score (simplified based on available columns)
           LEAST(100, GREATEST(0, ROUND((
-            (COUNT(CASE WHEN ccm.trend_state = 'Rising' THEN 1 END)::float / NULLIF(COUNT(*), 0) * 50) +
-            (AVG(LEAST(ccm.sales_volume / 100.0, 1.0)) * 30) +
-            (AVG(COALESCE(ccm.price_change_pct, 0)) * 20)
+            (COUNT(CASE WHEN ccm.trend_state ILIKE '%up%' OR ccm.trend_state ILIKE '%rising%' THEN 1 END)::float / NULLIF(COUNT(DISTINCT c.id), 0) * 50) +
+            (COALESCE(AVG(LEAST(COALESCE(ccm.sales_volume, ccm.volume_30d, 0) / 100.0, 1.0)), 0.5) * 30) +
+            (COALESCE(AVG(COALESCE(ccm.price_change_pct, 0)), 0) * 20)
           )::numeric, 0))) as opportunity_score,
-          -- Trend classification
           CASE 
-            WHEN COUNT(CASE WHEN ccm.trend_state = 'Rising' THEN 1 END)::float / NULLIF(COUNT(*), 0) > 0.5 THEN 'Rising'
-            WHEN COUNT(CASE WHEN ccm.trend_state = 'Declining' THEN 1 END)::float / NULLIF(COUNT(*), 0) > 0.5 THEN 'Declining'
+            WHEN COUNT(CASE WHEN ccm.trend_state ILIKE '%up%' OR ccm.trend_state ILIKE '%rising%' THEN 1 END)::float / NULLIF(COUNT(DISTINCT c.id), 0) > 0.5 THEN 'Rising'
+            WHEN COUNT(CASE WHEN ccm.trend_state ILIKE '%down%' OR ccm.trend_state ILIKE '%declining%' THEN 1 END)::float / NULLIF(COUNT(DISTINCT c.id), 0) > 0.5 THEN 'Declining'
             ELSE 'Mixed'
           END as set_trend,
-          -- Risk score (based on volatility)
-          ROUND((AVG(ABS(ccm.price_change_pct)) * 100)::numeric, 1) as risk_score
+          ROUND((COALESCE(AVG(ABS(COALESCE(ccm.price_change_pct, 0))), 0) * 100)::numeric, 1) as risk_score
         FROM sets s
         LEFT JOIN cards c ON s.id = c.set_id
-        LEFT JOIN card_computed_metrics ccm ON c.id = ccm.card_id
-        WHERE ccm.date = (SELECT MAX(date) FROM card_computed_metrics)
-          AND ${whereClause}
+        LEFT JOIN card_computed_metrics ccm ON c.id::text = ccm.card_id::text
+        ${whereClause}
         GROUP BY s.id, s.console_name, s.name
+        HAVING COUNT(DISTINCT c.id) > 0
       )
       SELECT 
         *,
@@ -2489,18 +2503,18 @@ app.get('/api/sets', async (req, res) => {
       ${minOpportunity ? `WHERE opportunity_score >= ${Number(minOpportunity)}` : ''}
       ${trendState ? `${minOpportunity ? 'AND' : 'WHERE'} set_trend = '${trendState}'` : ''}
       ${minLiquidity ? `${minOpportunity || trendState ? 'AND' : 'WHERE'} avg_liquidity >= ${Number(minLiquidity)}` : ''}
-      ORDER BY opportunity_score DESC, avg_price DESC
+      ORDER BY total_volume DESC, card_count DESC
       LIMIT $${paramIndex} OFFSET $${paramIndex + 1}
     `;
     
-    params.push(limit, offset);
+    params.push(parseInt(limit), parseInt(offset));
     const { rows } = await client.query(query, params);
     
     client.release();
     
     res.json({
       sets: rows,
-      total: rows.length > 0 ? rows[0].total_count : 0,
+      total: rows.length > 0 ? parseInt(rows[0].total_count) : 0,
       limit: parseInt(limit),
       offset: parseInt(offset)
     });
@@ -2520,57 +2534,54 @@ app.get('/api/sets/:id', async (req, res) => {
     const { rows: [set] } = await client.query(`
       SELECT 
         s.id,
-        s.console_name,
+        COALESCE(s.console_name, s.name, 'Unknown Set') as console_name,
         s.name,
         s.slug,
         s.sport_id,
-        COUNT(ccm.card_id) as card_count,
-        ROUND(AVG(ccm.loose_price)::numeric, 2) as avg_price,
-        ROUND(MAX(ccm.loose_price)::numeric, 2) as max_price,
-        ROUND(MIN(ccm.loose_price)::numeric, 2) as min_price,
-        SUM(ccm.sales_volume)::bigint as total_volume,
-        COUNT(CASE WHEN ccm.trend_state = 'Rising' THEN 1 END) as rising_count,
-        COUNT(CASE WHEN ccm.trend_state = 'Declining' THEN 1 END) as declining_count,
-        COUNT(CASE WHEN ccm.trend_state = 'Stable' THEN 1 END) as stable_count,
+        COUNT(DISTINCT c.id)::int as card_count,
+        ROUND(AVG(COALESCE(ccm.loose_price, ccm.avg_price, 0))::numeric, 2) as avg_price,
+        ROUND(MAX(COALESCE(ccm.loose_price, ccm.avg_price, 0))::numeric, 2) as max_price,
+        ROUND(MIN(COALESCE(ccm.loose_price, ccm.avg_price, 0))::numeric, 2) as min_price,
+        COALESCE(SUM(COALESCE(ccm.sales_volume, ccm.volume_30d, 0)), 0)::bigint as total_volume,
+        COUNT(CASE WHEN ccm.trend_state ILIKE '%up%' OR ccm.trend_state ILIKE '%rising%' THEN 1 END) as rising_count,
+        COUNT(CASE WHEN ccm.trend_state ILIKE '%down%' OR ccm.trend_state ILIKE '%declining%' THEN 1 END) as declining_count,
+        COUNT(CASE WHEN ccm.trend_state ILIKE '%flat%' OR ccm.trend_state ILIKE '%stable%' THEN 1 END) as stable_count,
         MAX(ccm.date) as last_updated
       FROM sets s
       LEFT JOIN cards c ON s.id = c.set_id
-      LEFT JOIN card_computed_metrics ccm ON c.id = ccm.card_id
+      LEFT JOIN card_computed_metrics ccm ON c.id::text = ccm.card_id::text
       WHERE s.id = $1
-        AND ccm.date = (SELECT MAX(date) FROM card_computed_metrics)
       GROUP BY s.id, s.console_name, s.name, s.slug, s.sport_id
     `, [id]);
     
     // Top cards in set
     const { rows: topCards } = await client.query(`
       SELECT 
-        ccm.card_id,
-        ccm.product_name,
-        ccm.loose_price,
-        ccm.graded_price,
-        ccm.psa10_price,
-        ccm.sales_volume,
-        ccm.price_change_pct,
-        ccm.trend_state
-      FROM card_computed_metrics ccm
-      JOIN cards c ON ccm.card_id = c.id
+        c.id as card_id,
+        COALESCE(c.card_name, c.raw_product_name, ccm.product_name, 'Card #' || c.card_number) as product_name,
+        COALESCE(ccm.loose_price, ccm.avg_price, 0) as loose_price,
+        COALESCE(ccm.graded_price, 0) as graded_price,
+        COALESCE(ccm.psa10_price, 0) as psa10_price,
+        COALESCE(ccm.sales_volume, ccm.volume_30d, 0) as sales_volume,
+        COALESCE(ccm.price_change_pct, 0) as price_change_pct,
+        COALESCE(ccm.trend_state, 'Stable') as trend_state
+      FROM cards c
+      LEFT JOIN card_computed_metrics ccm ON c.id::text = ccm.card_id::text
       WHERE c.set_id = $1
-        AND ccm.date = (SELECT MAX(date) FROM card_computed_metrics)
-        AND ccm.loose_price IS NOT NULL
-      ORDER BY ccm.loose_price DESC
+      ORDER BY COALESCE(ccm.loose_price, ccm.avg_price, 0) DESC, COALESCE(ccm.sales_volume, ccm.volume_30d, 0) DESC
       LIMIT 20
     `, [id]);
     
     // Historical set metrics
     const { rows: history } = await client.query(`
       SELECT 
-        ccm.date,
-        ROUND(AVG(ccm.loose_price)::numeric, 2) as avg_price,
-        SUM(ccm.sales_volume)::bigint as total_volume,
-        COUNT(*) as card_count,
-        COUNT(CASE WHEN ccm.trend_state = 'Rising' THEN 1 END) as rising_count
-      FROM card_computed_metrics ccm
-      JOIN cards c ON ccm.card_id = c.id
+        COALESCE(ccm.date, CURRENT_DATE) as date,
+        ROUND(AVG(COALESCE(ccm.loose_price, ccm.avg_price, 0))::numeric, 2) as avg_price,
+        SUM(COALESCE(ccm.sales_volume, ccm.volume_30d, 0))::bigint as total_volume,
+        COUNT(DISTINCT c.id) as card_count,
+        COUNT(CASE WHEN ccm.trend_state ILIKE '%up%' OR ccm.trend_state ILIKE '%rising%' THEN 1 END) as rising_count
+      FROM cards c
+      JOIN card_computed_metrics ccm ON c.id::text = ccm.card_id::text
       WHERE c.set_id = $1
         AND ccm.date >= CURRENT_DATE - INTERVAL '${days} days'
       GROUP BY ccm.date
@@ -2954,11 +2965,11 @@ app.get('/sale-feed', (req, res) => {
 });
 
 app.get('/cards/volatility', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'cards-volatility.html'));
+  res.redirect('/cards');
 });
 
 app.get('/cards/premium', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'cards-premium.html'));
+  res.redirect('/cards');
 });
 
 app.get(/^\/cards(?!\/api)/, (req, res) => {
@@ -2966,11 +2977,11 @@ app.get(/^\/cards(?!\/api)/, (req, res) => {
 });
 
 app.get('/sets/performance', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'sets-performance.html'));
+  res.redirect('/sets');
 });
 
 app.get('/sets/liquidity', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'sets-liquidity.html'));
+  res.redirect('/sets');
 });
 
 app.get(/^\/sets(?!\/api)/, (req, res) => {

@@ -637,7 +637,11 @@ class SetsPage {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        return await response.json();
+        const data = await response.json();
+        if (data && Array.isArray(data.sets)) {
+            return data.sets;
+        }
+        return data;
     }
 }
 
